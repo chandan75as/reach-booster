@@ -6,166 +6,172 @@
     <title>Reach Buster - Main Dashboard</title>
     <style>
         /* Advance Coding Background Theme (Hacker Style) */
+        :root {
+            --bg-dark: #050505;
+            --neon-green: #00ff00;
+            --dark-green: #002200;
+            --border-green: #008800;
+            --danger-red: #ff3333;
+            --gold: #ffaa00;
+        }
+
         body {
-            background-color: #050505;
-            color: #00ff00;
+            background-color: var(--bg-dark);
+            color: var(--neon-green);
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle, #002200 10%, transparent 10%),
-                radial-gradient(circle, #002200 10%, transparent 10%);
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle, var(--dark-green) 10%, transparent 10%), radial-gradient(circle, var(--dark-green) 10%, transparent 10%);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
         }
 
-        /* Top Navbar */
-        .navbar {
-            width: 100%;
-            background: rgba(0, 20, 0, 0.9);
-            border-bottom: 2px solid #00ff00;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            box-shadow: 0 0 15px #00ff00;
-        }
-
-        .navbar h2 {
-            margin: 0;
-            color: #ffaa00; /* Premium Gold for logo */
-            text-shadow: 0 0 10px #ffaa00;
-            letter-spacing: 2px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .wallet-box {
-            background: #001100;
-            border: 1px solid #00ff00;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            box-shadow: inset 0 0 10px #00ff00;
-        }
-
-        .logout-btn {
-            background: #330000;
-            color: #ff3333;
-            border: 1px solid #ff3333;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #ff3333;
-            color: #fff;
-            box-shadow: 0 0 10px #ff3333;
-        }
-
-        /* Main Dashboard Container */
-        .dashboard-container {
-            background: rgba(0, 0, 0, 0.85);
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 10px;
-            margin-top: 40px;
-        }
-
-        .dashboard-container h3 {
-            border-bottom: 1px dashed #00ff00;
-            padding-bottom: 10px;
-            margin-top: 0;
-            text-transform: uppercase;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 15px;
-            color: #cccccc;
-        }
-
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 12px;
-            background: #001100;
-            border: 1px solid #008800;
-            color: #00ff00;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .input-group input:focus, .input-group select:focus {
-            border-color: #00ff00;
-            box-shadow: 0 0 8px #00ff00;
-        }
-
-        /* Calculator Box */
-        .calc-box {
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px dashed #ffaa00;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 18px;
-            color: #ffaa00;
-        }
-
-        .calc-box span {
-            font-weight: bold;
-            font-size: 22px;
-            text-shadow: 0 0 5px #ffaa00;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: #003300;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Courier New', Courier, monospace;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .submit-btn:hover {
-            background: #00ff00;
-            color: #000;
-            box-shadow: 0 0 20px #00ff00;
-        }
-
-        /* Loading Overlay */
+        /* Loading Screen */
         #loadingScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; color: #00ff00; display: flex;
-            justify-content: center; align-items: center; z-index: 2000;
-            font-size: 20px;
+            background: #000; color: var(--neon-green); display: flex;
+            justify-content: center; align-items: center; z-index: 3000;
+            font-size: 20px; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* ---------------------------------
+           SIDEBAR STYLES
+           --------------------------------- */
+        .sidebar {
+            width: 250px;
+            background: rgba(0, 15, 0, 0.95);
+            border-right: 2px solid var(--border-green);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 15px rgba(0, 255, 0, 0.2);
+            z-index: 100;
+        }
+
+        .sidebar-profile {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px dashed var(--border-green);
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .avatar {
+            width: 60px; height: 60px;
+            background: var(--dark-green);
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 30px; box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .username { color: var(--gold); font-weight: bold; font-size: 16px; margin-bottom: 5px; text-transform: uppercase;}
+        .wallet-badge { background: var(--gold); color: #000; padding: 5px 10px; font-size: 14px; font-weight: bold; border-radius: 3px; display: inline-block;}
+
+        .sidebar-menu {
+            list-style: none; padding: 0; margin: 0;
+            flex: 1; overflow-y: auto;
+        }
+
+        .sidebar-menu li { border-bottom: 1px solid rgba(0, 255, 0, 0.2); }
+        .sidebar-menu li a {
+            display: block; padding: 15px 20px; color: var(--neon-green);
+            text-decoration: none; font-weight: bold; transition: 0.3s;
+        }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background: rgba(0, 255, 0, 0.2); border-left: 5px solid var(--neon-green);
+        }
+
+        .logout-btn-side {
+            background: #220000; color: var(--danger-red); text-align: center;
+            padding: 15px; border-top: 1px solid var(--danger-red); cursor: pointer;
+            font-weight: bold; transition: 0.3s;
+        }
+        .logout-btn-side:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
+
+        /* ---------------------------------
+           MAIN CONTENT AREA
+           --------------------------------- */
+        .main-content {
+            flex: 1; padding: 20px; overflow-y: auto;
+        }
+
+        /* Top Stats Grid */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.8); border: 1px solid var(--neon-green);
+            padding: 15px; border-radius: 5px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .stat-info h4 { margin: 0; font-size: 12px; color: #aaa; text-transform: uppercase; }
+        .stat-info span { font-size: 20px; font-weight: bold; color: var(--gold); }
+
+        /* Platform Badges (Instagram, Facebook etc) */
+        .platform-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;
+        }
+        .platform-btn {
+            background: var(--dark-green); border: 1px solid var(--border-green);
+            color: var(--neon-green); padding: 10px; text-align: center;
+            cursor: pointer; transition: 0.3s; font-size: 14px; text-transform: uppercase;
+        }
+        .platform-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-green); }
+
+        /* Form and Notes Layout (Split Screen) */
+        .order-layout {
+            display: flex; gap: 20px;
+        }
+
+        /* Left side - Form */
+        .order-panel {
+            flex: 6; background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--neon-green); padding: 20px; border-radius: 5px;
+        }
+        .order-panel h3 { margin-top: 0; border-bottom: 1px dashed var(--neon-green); padding-bottom: 10px; }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #ccc; }
+        .input-group select, .input-group input {
+            width: 100%; padding: 10px; background: #001100;
+            border: 1px solid var(--border-green); color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace; outline: none; box-sizing: border-box;
+        }
+        .input-group select:focus, .input-group input:focus { border-color: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+
+        /* Description Box (Read Before Order) */
+        .desc-box {
+            background: rgba(255, 170, 0, 0.1); border: 1px dashed var(--gold);
+            padding: 10px; font-size: 12px; margin-bottom: 15px; color: #ccc;
+        }
+        .desc-box span { color: var(--gold); font-weight: bold; display: block; margin-bottom: 5px;}
+
+        .submit-btn {
+            width: 100%; padding: 12px; background: #003300;
+            border: 1px solid var(--neon-green); color: var(--neon-green);
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            font-family: 'Courier New', Courier, monospace; text-transform: uppercase; transition: 0.3s;
+        }
+        .submit-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+
+        /* Right side - Notes / Guide */
+        .notes-panel {
+            flex: 4; background: rgba(50, 0, 0, 0.3);
+            border: 1px solid var(--danger-red); padding: 20px; border-radius: 5px;
+        }
+        .notes-panel h3 { margin-top: 0; color: var(--danger-red); border-bottom: 1px dashed var(--danger-red); padding-bottom: 10px; }
+        .notes-panel p { font-size: 14px; line-height: 1.5; color: #ff9999; }
+        .notes-panel ol { padding-left: 20px; font-size: 13px; color: #ffcccc;}
+        .notes-panel li { margin-bottom: 10px; }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .order-layout { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .platform-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -176,89 +182,172 @@
         > SYSTEM_AUTHENTICATING... PLEASE WAIT_
     </div>
 
-    <!-- Top Navigation Bar -->
-    <div class="navbar">
-        <h2>👑 REACH BUSTER</h2>
-        <div class="user-info">
-            <div class="wallet-box">
-                WALLET: ₹<span id="walletBalance">0.00</span>
-            </div>
-            <button class="logout-btn" onclick="executeLogout()">[ LOGOUT ]</button>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-profile">
+            <div class="avatar">👨‍💻</div>
+            <div class="username" id="displayUsername">NODE_USER</div>
+            <div class="wallet-badge">₹<span id="sideWalletBalance">0.00</span></div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active">> New Order</a></li>
+            <li><a href="#">> Bulk Order</a></li>
+            <li><a href="#">> Orders History</a></li>
+            <li><a href="#">> Services</a></li>
+            <li><a href="#">> Add Funds</a></li>
+            <li><a href="#">> Tickets Support <span style="color:var(--gold); float:right;">[0]</span></a></li>
+        </ul>
+        <div class="logout-btn-side" onclick="executeLogout()">
+            [ TERMINATE SESSION ]
         </div>
     </div>
 
-    <!-- Main Order Area -->
-    <div class="dashboard-container">
-        <h3>> INITIATE_NEW_ORDER</h3>
+    <!-- MAIN DASHBOARD -->
+    <div class="main-content">
         
-        <form id="orderForm" onsubmit="submitOrder(event)">
+        <!-- Top Stats Row -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info"><h4>My Balance</h4><span>₹<span id="topWalletBalance">0.00</span></span></div>
+                <div>💰</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h4>Total Orders</h4><span style="color:var(--neon-green);">0</span></div>
+                <div>📋</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h4>Spent Balance</h4><span style="color:var(--danger-red);">₹0.00</span></div>
+                <div>💸</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h4>System Status</h4><span style="color:#00ffff;">ONLINE_</span></div>
+                <div>📡</div>
+            </div>
+        </div>
+
+        <!-- Platform Selection Row -->
+        <div class="platform-grid">
+            <button class="platform-btn">Instagram</button>
+            <button class="platform-btn">Facebook</button>
+            <button class="platform-btn">YouTube</button>
+            <button class="platform-btn">Twitter</button>
+            <button class="platform-btn">Telegram</button>
+            <button class="platform-btn">TikTok</button>
+            <button class="platform-btn">LinkedIn</button>
+            <button class="platform-btn">WhatsApp</button>
+            <button class="platform-btn">Kick</button>
+            <button class="platform-btn">Everything</button>
+        </div>
+
+        <!-- Form & Notes Split Layout -->
+        <div class="order-layout">
             
-            <div class="input-group">
-                <label>> Select Target Service :</label>
-                <select id="serviceType" required>
-                    <option value="views">Instagram Premium Views (₹100 / 100K)</option>
-                    <!-- Future ke liye aur options add kar sakte ho -->
-                </select>
+            <!-- LEFT: Order Form -->
+            <div class="order-panel">
+                <h3>> INITIATE_NEW_ORDER</h3>
+                
+                <form id="orderForm" onsubmit="submitOrder(event)">
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select id="categoryType">
+                            <option>Instagram Followers | UltraFast 🚀 | NON DROP</option>
+                            <option>Instagram Premium Views (₹100/100k)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Service</label>
+                        <select id="serviceType">
+                            <option>ID: 2187 - Instagram Followers || 100% Real || Cancel Enable || Non-Drop</option>
+                            <option value="views">ID: 1011 - Instagram Views || UltraFast || No Refill</option>
+                        </select>
+                    </div>
+
+                    <!-- Description Box (Terminal Style) -->
+                    <div class="desc-box">
+                        <span>[!] SYSTEM INSTRUCTIONS:</span>
+                        - Location: Global<br>
+                        - Speed: 100k/day 🚀<br>
+                        - Drop Rate: Low<br>
+                        - Link Format: Profile Link / @username<br>
+                        <span style="color:var(--danger-red); margin-top:5px;">Your Account Must be Public 🔓</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Average time 🕒</label>
+                        <input type="text" value="Not enough data" readonly style="color:#aaa; background:rgba(255,255,255,0.05);">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Target Link</label>
+                        <input type="url" id="targetLink" placeholder="https://instagram.com/..." required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Quantity (Min: 100 - Max: 500000)</label>
+                        <!-- Added your calculator trigger here -->
+                        <input type="number" id="orderQuantity" min="100" max="500000" placeholder="Enter quantity" required onkeyup="calculatePrice()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Total Charge (₹)</label>
+                        <input type="text" id="totalCharge" value="0.00" readonly style="color:var(--gold); font-weight:bold; font-size:18px;">
+                    </div>
+
+                    <button type="submit" class="submit-btn">EXECUTE_SUBMIT</button>
+                </form>
             </div>
 
-            <div class="input-group">
-                <label>> Target Public Link :</label>
-                <input type="url" id="targetLink" placeholder="https://instagram.com/reel/..." required>
+            <!-- RIGHT: Important Notes Guide -->
+            <div class="notes-panel">
+                <h3>[!] SYSTEM WARNINGS</h3>
+                <p><strong>Attention!</strong><br>
+                Before ordering Instagram followers or views, you must disable the "Flag for review" option to ensure successful delivery.</p>
+                <p><strong>Bypass Guide:</strong></p>
+                <ol>
+                    <li>Open Instagram app and go to «Settings and activity»</li>
+                    <li>Select «Follow and invite friends»</li>
+                    <li>Turn OFF the «Flag for review» toggle switch.</li>
+                </ol>
+                <div style="margin-top: 20px; border-top: 1px dashed var(--danger-red); padding-top:10px;">
+                    <p style="color:#ff6666; font-size:12px;">* During heavy traffic, delivery speed might slow down.<br>* Do not place a new order for the same link until the current order is marked as completed.</p>
+                </div>
             </div>
-
-            <div class="input-group">
-                <label>> Enter Quantity (Min 1000) :</label>
-                <input type="number" id="orderQuantity" min="1000" placeholder="e.g. 50000" required onkeyup="calculatePrice()">
-            </div>
-
-            <!-- Automatic Calculator Box -->
-            <div class="calc-box">
-                > TOTAL CHARGE: ₹<span id="totalCharge">0.00</span>
-            </div>
-
-            <button type="submit" class="submit-btn">EXECUTE_ORDER</button>
-
-        </form>
+            
+        </div>
     </div>
 
-    <!-- ========================================= -->
-    <!-- LOGIC & FIREBASE INTEGRATION              -->
-    <!-- ========================================= -->
-    
-    <!-- Calculator Script (Local UI Logic) -->
+    <!-- UI Interaction Scripts (Calculator) -->
     <script>
         function calculatePrice() {
             const quantity = document.getElementById('orderQuantity').value;
             const chargeDisplay = document.getElementById('totalCharge');
             
             // Logic: 100,000 views = 100 Rs. So, 1000 views = 1 Rs.
-            // Formula: (Quantity / 1000) * 1
             if (quantity && quantity >= 0) {
                 const price = (quantity / 1000) * 1; 
-                chargeDisplay.innerText = price.toFixed(2);
+                chargeDisplay.value = price.toFixed(2); // input read-only me value update hogi
             } else {
-                chargeDisplay.innerText = "0.00";
+                chargeDisplay.value = "0.00";
             }
         }
 
         function submitOrder(e) {
             e.preventDefault();
-            const link = document.getElementById('targetLink').value;
             const quantity = document.getElementById('orderQuantity').value;
-            const price = (quantity / 1000) * 1;
-
-            const currentBalance = parseFloat(document.getElementById('walletBalance').innerText);
+            const price = parseFloat(document.getElementById('totalCharge').value);
+            // Updated to check sideWalletBalance ID
+            const currentBalance = parseFloat(document.getElementById('sideWalletBalance').innerText);
 
             if (currentBalance < price) {
                 alert("ERROR: Insufficient funds in wallet! Please add ₹" + (price - currentBalance).toFixed(2) + " more.");
             } else {
                 alert("ORDER ACCEPTED! Quantity: " + quantity + " | Charge: ₹" + price + "\n\n(Backend API logic pending)");
-                // Yahan aap apna API call ka logic lagaoge jo server.js ko request bhejega.
             }
         }
     </script>
 
-    <!-- Firebase Auth Check & Data Fetch Module -->
+    <!-- FIREBASE MODULE & AUTH CHECK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
@@ -279,27 +368,37 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        // Security Check: Dekho user logged in hai ya nahi
+        // Security Check
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User logged in hai, loading screen hata do
+                // User hai toh loading screen hatao
                 document.getElementById('loadingScreen').style.display = 'none';
 
-                // Database se user ka wallet balance fetch karna
+                // Realtime Database se data uthao (Name and Wallet)
                 const userRef = ref(database, 'users/' + user.uid);
                 onValue(userRef, (snapshot) => {
                     const data = snapshot.val();
-                    if (data && data.walletBalance !== undefined) {
-                        document.getElementById('walletBalance').innerText = data.walletBalance.toFixed(2);
+                    if (data) {
+                        // Username update (Agar naam hai toh pehla word le lo)
+                        if(data.fullName) {
+                            document.getElementById('displayUsername').innerText = data.fullName.split(" ")[0];
+                        }
+                        
+                        // Wallet Balance update (dono jagah - sidebar aur top card)
+                        if (data.walletBalance !== undefined) {
+                            const bal = data.walletBalance.toFixed(2);
+                            document.getElementById('sideWalletBalance').innerText = bal;
+                            document.getElementById('topWalletBalance').innerText = bal;
+                        }
                     }
                 });
             } else {
-                // User logged in nahi hai, index.html (login page) par fenk do
+                // Bina login ke access ki koshish, wapas index.html par bhejo
                 window.location.href = "index.html";
             }
         });
 
-        // Logout Function
+        // Logout
         window.executeLogout = function() {
             signOut(auth).then(() => {
                 window.location.href = "index.html";
@@ -308,6 +407,5 @@
             });
         };
     </script>
-
 </body>
 </html>
