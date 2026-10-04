@@ -51,11 +51,35 @@
 
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; margin-bottom: 5px; font-size: 14px; }
+        
         .input-group input {
             width: 100%; padding: 10px; background: #001100; border: 1px solid #008800; color: #00ff00;
             font-family: 'Courier New', Courier, monospace; box-sizing: border-box; outline: none; transition: 0.3s;
         }
         .input-group input:focus { border-color: #00ff00; box-shadow: 0 0 8px #00ff00; }
+
+        /* Password Wrapper for Show/Hide */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            padding-right: 70px; /* Space for the toggle button */
+        }
+        .toggle-pass {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #008800;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .toggle-pass:hover { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
 
         .submit-btn {
             width: 100%; padding: 12px; background: #003300; border: 1px solid #00ff00; color: #00ff00;
@@ -138,14 +162,17 @@
         <!-- LOGIN FORM -->
         <div id="login" class="form-section active">
             <h2>> USER_LOGIN</h2>
-            <form onsubmit="return window.processLogin(event)">
+            <form onsubmit="return handleSecureLogin(event)">
                 <div class="input-group">
                     <label>> Enter Email :</label>
                     <input type="email" id="logEmail" placeholder="example@mail.com" required>
                 </div>
                 <div class="input-group">
                     <label>> Enter Password :</label>
-                    <input type="password" id="logPass" placeholder="********" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="logPass" placeholder="********" required>
+                        <button type="button" class="toggle-pass" onclick="togglePassword('logPass', this)">[SHOW]</button>
+                    </div>
                 </div>
                 <button type="submit" class="submit-btn">Execute Login</button>
             </form>
@@ -154,7 +181,7 @@
         <!-- SIGNUP FORM -->
         <div id="signup" class="form-section">
             <h2>> CREATE_NODE</h2>
-            <form id="signupFormContent" onsubmit="return window.processSignup(event)">
+            <form id="signupFormContent" onsubmit="return handleSecureSignup(event)">
                 <div class="input-group">
                     <label>> Full Name :</label>
                     <input type="text" id="regName" placeholder="John Doe" required>
@@ -165,11 +192,22 @@
                 </div>
                 <div class="input-group">
                     <label>> Mobile Number :</label>
-                    <input type="tel" id="regMobile" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+                    <!-- Max 10 digits lock applied here -->
+                    <input type="tel" id="regMobile" pattern="[0-9]{10}" maxlength="10" minlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="10-digit mobile number" required>
                 </div>
                 <div class="input-group">
                     <label>> Create Password :</label>
-                    <input type="password" id="regPass" placeholder="********" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="regPass" placeholder="********" required>
+                        <button type="button" class="toggle-pass" onclick="togglePassword('regPass', this)">[SHOW]</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>> Confirm Password :</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="regPassConfirm" placeholder="********" required>
+                        <button type="button" class="toggle-pass" onclick="togglePassword('regPassConfirm', this)">[SHOW]</button>
+                    </div>
                 </div>
                 <button type="submit" class="submit-btn">Initialize Account</button>
             </form>
@@ -200,7 +238,7 @@
 
     <!-- UI Interaction Scripts -->
     <script>
-        // Make switchTab globally available
+        // Tab Switch Logic
         window.switchTab = function(tabId) {
             document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -211,6 +249,49 @@
                 document.getElementById('loginTabBtn').classList.add('active');
             } else {
                 document.getElementById('signupTabBtn').classList.add('active');
+            }
+        }
+
+        // Show / Hide Password Logic
+        function togglePassword(inputId, btn) {
+            const inputField = document.getElementById(inputId);
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                btn.innerText = "[HIDE]";
+            } else {
+                inputField.type = "password";
+                btn.innerText = "[SHOW]";
+            }
+        }
+
+        // Secure Login Submission Handler
+        function handleSecureLogin(event) {
+            event.preventDefault();
+            if (typeof window.processLogin === "function") {
+                return window.processLogin(event);
+            } else {
+                alert("ERROR: System link broken! brain.js load nahi ho paya. Please refresh page.");
+                return false;
+            }
+        }
+
+        // Secure Signup Submission & Password Match Check
+        function handleSecureSignup(event) {
+            event.preventDefault();
+            
+            const pass1 = document.getElementById('regPass').value;
+            const pass2 = document.getElementById('regPassConfirm').value;
+
+            if (pass1 !== pass2) {
+                alert("ERROR: Dono Password match nahi ho rahe hain!");
+                return false;
+            }
+
+            if (typeof window.processSignup === "function") {
+                return window.processSignup(event);
+            } else {
+                alert("ERROR: System link broken! brain.js load nahi ho paya. Please refresh page.");
+                return false;
             }
         }
 
@@ -226,7 +307,7 @@
         }
     </script>
 
-    <!-- FIREBASE MODULE LINK (Ye zaroori hai!) -->
+    <!-- FIREBASE MODULE LINK -->
     <script type="module" src="brain.js"></script>
 
 </body>
