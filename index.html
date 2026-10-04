@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reach Buster - Advanced Access</title>
+    <title>Reach Booster</title>
     <style>
         /* Advance Coding Background Theme (Hacker Style) */
         body {
@@ -89,7 +89,7 @@
         .submit-btn:hover { background: #00ff00; color: #000; box-shadow: 0 0 15px #00ff00; }
 
         /* Safety Rules Section */
-        .safety-rules { margin-top: 35px; padding: 15px; border: 1px solid #ff3333; background: rgba(50, 0, 0, 0.4); color: #ff6666; font-size: 13px; box-shadow: inset 0 0 10px rgba(255, 51, 51, 0.2); }
+        .safety-rules { margin-bottom: 25px; padding: 15px; border: 1px solid #ff3333; background: rgba(50, 0, 0, 0.4); color: #ff6666; font-size: 13px; box-shadow: inset 0 0 10px rgba(255, 51, 51, 0.2); }
         .safety-rules h3 { color: #ff3333; margin-top: 0; text-align: center; border-bottom: 1px dashed #ff3333; padding-bottom: 10px; text-shadow: 0 0 5px #ff3333; }
         .rules-scroll { max-height: 200px; overflow-y: auto; padding-right: 10px; margin-bottom: 15px; }
         .rules-scroll::-webkit-scrollbar { width: 5px; }
@@ -135,7 +135,7 @@
     <div id="premiumWelcomePopup" class="popup-overlay">
         <div class="popup-box">
             <div class="popup-header">
-                <h2>👑 REACH BUSTER 👑</h2>
+                <h2>REACH BOOSTER</h2>
                 <span>SYSTEM_UPDATE_V2.0_DETECTED</span>
             </div>
             <div class="popup-content">
@@ -152,7 +152,28 @@
 
     <!-- MAIN TERMINAL -->
     <div class="terminal-container">
-        <h1>[ REACH_BUSTER_v1.0 ]</h1>
+        <h1>REACH BOOSTER</h1>
+
+        <!-- STRICT SAFETY RULES SECTION (MOVED TO TOP) -->
+        <div class="safety-rules">
+            <h3>< SYSTEM WARNINGS & TERMS OF SERVICE ></h3>
+            <div class="rules-scroll">
+                <ol>
+                    <li><strong>OWN RISK WARNING:</strong> Apne real, personal ya main account par fake followers/views ka istemal apne risk par karein. Agar Instagram ya koi dusra platform aapka account block karta hai, toh uski 100% zimmedari sirf aapki hogi.</li>
+                    <li><strong>NO REFUND POLICY:</strong> Ek baar order place hone ke baad kisi bhi condition me paise refund nahi honge.</li>
+                    <li><strong>NO PASSWORD REQUIRED:</strong> Hum kabhi bhi aapka social media password nahi mangte. System sirf public link par kaam karta hai.</li>
+                    <li><strong>STRICTLY PUBLIC ACCOUNTS:</strong> Order process hone se lekar complete hone tak aapka account "Public" hona chahiye.</li>
+                    <li><strong>DROP RATE ALERT:</strong> SMM services automated hoti hain. Instagram updates ke dauran followers/views drop ho sakte hain. Hum lifetime guarantee nahi dete.</li>
+                    <li><strong>AVOID OVERLAPPING:</strong> Ek hi link par ek sath 2 order tab tak na lagayein jab tak pehla order 'Complete' na ho jaye.</li>
+                </ol>
+            </div>
+
+            <!-- Mandatory Checkbox -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeCheckbox">
+                <label for="agreeCheckbox">I have read all risks and take full responsibility.</label>
+            </div>
+        </div>
         
         <div class="tabs">
             <button class="tab-btn active" id="loginTabBtn" onclick="window.switchTab('login')">LOGIN</button>
@@ -192,7 +213,6 @@
                 </div>
                 <div class="input-group">
                     <label>> Mobile Number :</label>
-                    <!-- Max 10 digits lock applied here -->
                     <input type="tel" id="regMobile" pattern="[0-9]{10}" maxlength="10" minlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="10-digit mobile number" required>
                 </div>
                 <div class="input-group">
@@ -211,27 +231,6 @@
                 </div>
                 <button type="submit" class="submit-btn">Initialize Account</button>
             </form>
-        </div>
-
-        <!-- STRICT SAFETY RULES SECTION -->
-        <div class="safety-rules">
-            <h3>< SYSTEM WARNINGS & TERMS OF SERVICE ></h3>
-            <div class="rules-scroll">
-                <ol>
-                    <li><strong>OWN RISK WARNING:</strong> Apne real, personal ya main account par fake followers/views ka istemal apne risk par karein. Agar Instagram ya koi dusra platform aapka account block karta hai, toh uski 100% zimmedari sirf aapki hogi.</li>
-                    <li><strong>NO REFUND POLICY:</strong> Ek baar order place hone ke baad kisi bhi condition me paise refund nahi honge.</li>
-                    <li><strong>NO PASSWORD REQUIRED:</strong> Hum kabhi bhi aapka social media password nahi mangte. System sirf public link par kaam karta hai.</li>
-                    <li><strong>STRICTLY PUBLIC ACCOUNTS:</strong> Order process hone se lekar complete hone tak aapka account "Public" hona chahiye.</li>
-                    <li><strong>DROP RATE ALERT:</strong> SMM services automated hoti hain. Instagram updates ke dauran followers/views drop ho sakte hain. Hum lifetime guarantee nahi dete.</li>
-                    <li><strong>AVOID OVERLAPPING:</strong> Ek hi link par ek sath 2 order tab tak na lagayein jab tak pehla order 'Complete' na ho jaye.</li>
-                </ol>
-            </div>
-
-            <!-- Mandatory Checkbox -->
-            <div class="checkbox-group">
-                <input type="checkbox" id="agreeCheckbox" required>
-                <label for="agreeCheckbox">I have read all risks and take full responsibility.</label>
-            </div>
         </div>
 
     </div>
@@ -264,9 +263,21 @@
             }
         }
 
+        // Validate Rules Checkbox
+        function isRulesAccepted() {
+            const checkbox = document.getElementById('agreeCheckbox');
+            if (!checkbox.checked) {
+                alert("Pehle Safety Rules padhein aur checkbox par click karein!");
+                return false;
+            }
+            return true;
+        }
+
         // Secure Login Submission Handler
         function handleSecureLogin(event) {
             event.preventDefault();
+            if (!isRulesAccepted()) return false;
+            
             if (typeof window.processLogin === "function") {
                 return window.processLogin(event);
             } else {
@@ -278,6 +289,7 @@
         // Secure Signup Submission & Password Match Check
         function handleSecureSignup(event) {
             event.preventDefault();
+            if (!isRulesAccepted()) return false;
             
             const pass1 = document.getElementById('regPass').value;
             const pass2 = document.getElementById('regPassConfirm').value;
