@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reach Buster - Main Dashboard</title>
+    <title>Reach Booster - Main Dashboard</title>
     <style>
         /* Advance Coding Background Theme (Hacker Style) */
         :root {
@@ -41,13 +41,14 @@
            SIDEBAR STYLES
            --------------------------------- */
         .sidebar {
-            width: 280px; /* Thoda bada kiya text space ke liye */
+            width: 280px; 
             background: rgba(0, 15, 0, 0.95);
             border-right: 2px solid var(--border-green);
             display: flex;
             flex-direction: column;
             box-shadow: 2px 0 15px rgba(0, 255, 0, 0.2);
-            z-index: 100;
+            z-index: 200; /* Increased for mobile overlap */
+            transition: transform 0.3s ease;
         }
 
         .sidebar-profile {
@@ -91,9 +92,33 @@
         }
         .logout-btn-side:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
 
+        /* Sidebar Overlay for Mobile */
+        .sidebar-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); z-index: 150; backdrop-filter: blur(2px);
+        }
+
         /* ---------------------------------
            MAIN CONTENT AREA
            --------------------------------- */
+        .content-wrapper {
+            flex: 1; display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none; background: rgba(0, 15, 0, 0.95);
+            border-bottom: 2px solid var(--border-green); padding: 15px 20px;
+            align-items: center; justify-content: space-between; z-index: 100;
+        }
+        .menu-btn {
+            background: var(--dark-green); color: var(--neon-green);
+            border: 1px solid var(--neon-green); padding: 8px 12px;
+            font-family: 'Courier New', Courier, monospace; font-size: 16px;
+            font-weight: bold; cursor: pointer;
+        }
+        .mobile-logo { color: var(--gold); font-size: 18px; font-weight: bold; text-shadow: 0 0 5px var(--gold); }
+
         .main-content {
             flex: 1; padding: 25px; overflow-y: auto;
         }
@@ -122,7 +147,6 @@
         }
         .platform-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-green); }
         
-        /* Coming Soon platforms styling */
         .platform-btn.disabled {
             opacity: 0.5; cursor: not-allowed; border-color: #333; color: #777; background: #0a0a0a;
         }
@@ -172,10 +196,38 @@
         .notes-panel ol { padding-left: 20px; font-size: 15px; color: #ffcccc; line-height: 1.6;}
         .notes-panel li { margin-bottom: 12px; }
 
+        /* =========================================
+           RESPONSIVE MEDIA QUERIES (Mobile & Tablet)
+           ========================================= */
         @media (max-width: 1200px) {
             .order-layout { flex-direction: column; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .platform-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .platform-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-header { display: flex; }
+            
+            .sidebar {
+                position: fixed; top: 0; bottom: 0; left: 0;
+                transform: translateX(-100%); /* Hidden by default on mobile */
+            }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            
+            .main-content { padding: 15px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 15px; }
+            .platform-grid { grid-template-columns: repeat(2, 1fr); }
+            .order-panel, .notes-panel { padding: 15px; }
+        }
+
+        @media (max-width: 480px) {
+            .platform-grid { grid-template-columns: 1fr; }
+            .stat-card { padding: 15px; }
         }
     </style>
 </head>
@@ -183,19 +235,20 @@
 
     <!-- Security Loading Screen -->
     <div id="loadingScreen">
-        > SYSTEM_AUTHENTICATING... PLEASE WAIT_
+        > SYSTEM_AUTHENTICATING...
     </div>
 
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
     <!-- SIDEBAR -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-profile">
             <div class="avatar">👨‍💻</div>
-            <!-- Yaha Firebase se automatic naam update hoga -->
             <div class="username" id="displayUsername">FETCHING...</div>
             <div class="wallet-badge">₹<span id="sideWalletBalance">0.00</span></div>
         </div>
         <ul class="sidebar-menu">
-            <!-- Sidebar links connected to HTML pages -->
             <li><a href="home.html" class="active">> New Order</a></li>
             <li><a href="bulk.html">> Bulk Order</a></li>
             <li><a href="history.html">> Orders History</a></li>
@@ -208,138 +261,146 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
-    <div class="main-content">
+    <!-- MAIN DASHBOARD WRAPPER -->
+    <div class="content-wrapper">
         
-        <!-- Top Stats Row -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info"><h4>My Balance</h4><span>₹<span id="topWalletBalance">0.00</span></span></div>
-                <div>💰</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h4>Total Orders</h4><span style="color:var(--neon-green);">0</span></div>
-                <div>📋</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h4>Spent Balance</h4><span style="color:var(--danger-red);">₹0.00</span></div>
-                <div>💸</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info"><h4>System Status</h4><span style="color:#00ffff;">ONLINE_</span></div>
-                <div>📡</div>
-            </div>
+        <!-- Mobile Header (Visible Only on Small Screens) -->
+        <div class="mobile-header">
+            <button class="menu-btn" onclick="toggleSidebar()">☰ MENU</button>
+            <div class="mobile-logo">REACH BOOSTER</div>
         </div>
 
-        <!-- Platform Selection Row -->
-        <div class="platform-grid">
-            <!-- Active Platform -->
-            <button class="platform-btn">Instagram</button>
+        <div class="main-content">
             
-            <!-- Disabled "Coming Soon" Platforms -->
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Facebook services are coming soon!')">Facebook</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: YouTube services are coming soon!')">YouTube</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Twitter services are coming soon!')">Twitter</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Telegram services are coming soon!')">Telegram</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: TikTok services are coming soon!')">TikTok</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: LinkedIn services are coming soon!')">LinkedIn</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: WhatsApp services are coming soon!')">WhatsApp</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Kick services are coming soon!')">Kick</button>
-            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: More services are coming soon!')">Everything</button>
-        </div>
-
-        <!-- Form & Notes Split Layout -->
-        <div class="order-layout">
-            
-            <!-- LEFT: Order Form -->
-            <div class="order-panel">
-                <h3>> INITIATE_NEW_ORDER</h3>
-                
-                <form id="orderForm" onsubmit="submitOrder(event)">
-                    <div class="input-group">
-                        <label>Category</label>
-                        <select id="categoryType">
-                            <option>Instagram Followers | UltraFast 🚀 | NON DROP</option>
-                            <option>Instagram Premium Views (₹100/100k)</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Service</label>
-                        <select id="serviceType">
-                            <option>ID: 2187 - Instagram Followers || 100% Real || Cancel Enable || Non-Drop</option>
-                            <option value="views">ID: 1011 - Instagram Views || UltraFast || No Refill</option>
-                        </select>
-                    </div>
-
-                    <!-- Description Box (Terminal Style) -->
-                    <div class="desc-box">
-                        <span>[!] SYSTEM INSTRUCTIONS:</span>
-                        - Location: Global<br>
-                        - Speed: 100k/day 🚀<br>
-                        - Drop Rate: Low<br>
-                        - Link Format: Profile Link / @username<br>
-                        <span style="color:var(--danger-red); margin-top:8px;">Your Account Must be Public 🔓</span>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Average time 🕒</label>
-                        <input type="text" value="Not enough data" readonly style="color:#aaa; background:rgba(255,255,255,0.05);">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Target Link</label>
-                        <input type="url" id="targetLink" placeholder="https://instagram.com/..." required>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Quantity (Min: 1000 - Max: 500000)</label>
-                        <input type="number" id="orderQuantity" min="1000" max="500000" placeholder="Enter quantity (e.g. 100000)" required onkeyup="calculatePrice()">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Total Charge (₹)</label>
-                        <input type="text" id="totalCharge" value="0.00" readonly style="color:var(--gold); font-weight:bold; font-size:20px;">
-                    </div>
-
-                    <button type="submit" class="submit-btn">EXECUTE_SUBMIT</button>
-                </form>
-            </div>
-
-            <!-- RIGHT: Important Notes Guide -->
-            <div class="notes-panel">
-                <h3>[!] SYSTEM WARNINGS</h3>
-                <p><strong>Attention!</strong><br>
-                Before ordering Instagram followers or views, you must disable the "Flag for review" option to ensure successful delivery.</p>
-                <p><strong>Bypass Guide:</strong></p>
-                <ol>
-                    <li>Open Instagram app and go to «Settings and activity»</li>
-                    <li>Select «Follow and invite friends»</li>
-                    <li>Turn OFF the «Flag for review» toggle switch.</li>
-                </ol>
-                <div style="margin-top: 25px; border-top: 1px dashed var(--danger-red); padding-top:15px;">
-                    <p style="color:#ff6666; font-size:14px;">* During heavy traffic, delivery speed might slow down.<br>* Do not place a new order for the same link until the current order is marked as completed.</p>
+            <!-- Top Stats Row -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info"><h4>My Balance</h4><span>₹<span id="topWalletBalance">0.00</span></span></div>
+                    <div>💰</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info"><h4>Total Orders</h4><span style="color:var(--neon-green);">0</span></div>
+                    <div>📋</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info"><h4>Spent Balance</h4><span style="color:var(--danger-red);">₹0.00</span></div>
+                    <div>💸</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info"><h4>System Status</h4><span style="color:#00ffff;">ONLINE_</span></div>
+                    <div>📡</div>
                 </div>
             </div>
-            
+
+            <!-- Platform Selection Row -->
+            <div class="platform-grid">
+                <button class="platform-btn">Instagram</button>
+                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Facebook services are coming soon!')">Facebook</button>
+                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: YouTube services are coming soon!')">YouTube</button>
+                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Twitter services are coming soon!')">Twitter</button>
+                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Telegram services are coming soon!')">Telegram</button>
+            </div>
+
+            <!-- Form & Notes Split Layout -->
+            <div class="order-layout">
+                
+                <!-- LEFT: Order Form -->
+                <div class="order-panel">
+                    <h3>> INITIATE_NEW_ORDER</h3>
+                    
+                    <form id="orderForm" onsubmit="submitOrder(event)">
+                        <div class="input-group">
+                            <label>Category</label>
+                            <select id="categoryType">
+                                <option>Instagram Followers | UltraFast 🚀 | NON DROP</option>
+                                <option>Instagram Premium Views (₹100/100k)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Service</label>
+                            <select id="serviceType">
+                                <option>ID: 2187 - Instagram Followers || 100% Real || Cancel Enable || Non-Drop</option>
+                                <option value="views">ID: 1011 - Instagram Views || UltraFast || No Refill</option>
+                            </select>
+                        </div>
+
+                        <!-- Description Box (Terminal Style) -->
+                        <div class="desc-box">
+                            <span>[!] SYSTEM INSTRUCTIONS:</span>
+                            - Location: Global<br>
+                            - Speed: 100k/day 🚀<br>
+                            - Drop Rate: Low<br>
+                            - Link Format: Profile Link / @username<br>
+                            <span style="color:var(--danger-red); margin-top:8px;">Your Account Must be Public 🔓</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Average time 🕒</label>
+                            <input type="text" value="Not enough data" readonly style="color:#aaa; background:rgba(255,255,255,0.05);">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Target Link</label>
+                            <input type="url" id="targetLink" placeholder="https://instagram.com/..." required>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Quantity (Min: 1000 - Max: 500000)</label>
+                            <input type="number" id="orderQuantity" min="1000" max="500000" placeholder="Enter quantity (e.g. 100000)" required onkeyup="calculatePrice()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Total Charge (₹)</label>
+                            <input type="text" id="totalCharge" value="0.00" readonly style="color:var(--gold); font-weight:bold; font-size:20px;">
+                        </div>
+
+                        <button type="submit" class="submit-btn">EXECUTE_SUBMIT</button>
+                    </form>
+                </div>
+
+                <!-- RIGHT: Important Notes Guide -->
+                <div class="notes-panel">
+                    <h3>[!] SYSTEM WARNINGS</h3>
+                    <p><strong>Attention!</strong><br>
+                    Before ordering Instagram followers or views, you must disable the "Flag for review" option to ensure successful delivery.</p>
+                    <p><strong>Bypass Guide:</strong></p>
+                    <ol>
+                        <li>Open Instagram app and go to «Settings and activity»</li>
+                        <li>Select «Follow and invite friends»</li>
+                        <li>Turn OFF the «Flag for review» toggle switch.</li>
+                    </ol>
+                    <div style="margin-top: 25px; border-top: 1px dashed var(--danger-red); padding-top:15px;">
+                        <p style="color:#ff6666; font-size:14px;">* During heavy traffic, delivery speed might slow down.<br>* Do not place a new order for the same link until the current order is marked as completed.</p>
+                    </div>
+                </div>
+                
+            </div>
         </div>
     </div>
 
-    <!-- UI Interaction Scripts (Calculator) -->
+    <!-- UI Interaction Scripts -->
     <script>
+        // Sidebar Toggle for Mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        // Calculator
         function calculatePrice() {
             const quantity = document.getElementById('orderQuantity').value;
             const chargeDisplay = document.getElementById('totalCharge');
             
-            // Logic: 100,000 views = 100 Rs. So, 1000 views = 1 Rs.
             if (quantity && quantity >= 0) {
                 const price = (quantity / 1000) * 1; 
-                chargeDisplay.value = price.toFixed(2); // input read-only me value update hogi
+                chargeDisplay.value = price.toFixed(2);
             } else {
                 chargeDisplay.value = "0.00";
             }
         }
 
+        // Form Submit
         function submitOrder(e) {
             e.preventDefault();
             const quantity = document.getElementById('orderQuantity').value;
@@ -375,23 +436,17 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        // Security Check
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User hai toh loading screen hatao
                 document.getElementById('loadingScreen').style.display = 'none';
 
-                // Realtime Database se data uthao (Name and Wallet)
                 const userRef = ref(database, 'users/' + user.uid);
                 onValue(userRef, (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
-                        // Username update (First name nikal kar display karega)
                         if(data.fullName) {
                             document.getElementById('displayUsername').innerText = data.fullName.split(" ")[0];
                         }
-                        
-                        // Wallet Balance update
                         if (data.walletBalance !== undefined) {
                             const bal = data.walletBalance.toFixed(2);
                             document.getElementById('sideWalletBalance').innerText = bal;
@@ -400,12 +455,10 @@
                     }
                 });
             } else {
-                // Bina login ke access ki koshish, wapas index.html par bhejo
                 window.location.href = "index.html";
             }
         });
 
-        // Logout
         window.executeLogout = function() {
             signOut(auth).then(() => {
                 window.location.href = "index.html";
