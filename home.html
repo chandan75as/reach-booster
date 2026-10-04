@@ -34,14 +34,14 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; color: var(--neon-green); display: flex;
             justify-content: center; align-items: center; z-index: 3000;
-            font-size: 20px; text-transform: uppercase; letter-spacing: 2px;
+            font-size: 24px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
         }
 
         /* ---------------------------------
            SIDEBAR STYLES
            --------------------------------- */
         .sidebar {
-            width: 250px;
+            width: 280px; /* Thoda bada kiya text space ke liye */
             background: rgba(0, 15, 0, 0.95);
             border-right: 2px solid var(--border-green);
             display: flex;
@@ -51,24 +51,24 @@
         }
 
         .sidebar-profile {
-            padding: 20px;
+            padding: 25px 20px;
             text-align: center;
             border-bottom: 1px dashed var(--border-green);
             background: rgba(0, 255, 0, 0.05);
         }
 
         .avatar {
-            width: 60px; height: 60px;
+            width: 70px; height: 70px;
             background: var(--dark-green);
             border: 2px solid var(--neon-green);
             border-radius: 50%;
-            margin: 0 auto 10px;
+            margin: 0 auto 15px;
             display: flex; justify-content: center; align-items: center;
-            font-size: 30px; box-shadow: 0 0 10px var(--neon-green);
+            font-size: 35px; box-shadow: 0 0 10px var(--neon-green);
         }
 
-        .username { color: var(--gold); font-weight: bold; font-size: 16px; margin-bottom: 5px; text-transform: uppercase;}
-        .wallet-badge { background: var(--gold); color: #000; padding: 5px 10px; font-size: 14px; font-weight: bold; border-radius: 3px; display: inline-block;}
+        .username { color: var(--gold); font-weight: bold; font-size: 20px; margin-bottom: 8px; text-transform: uppercase;}
+        .wallet-badge { background: var(--gold); color: #000; padding: 6px 12px; font-size: 16px; font-weight: bold; border-radius: 3px; display: inline-block;}
 
         .sidebar-menu {
             list-style: none; padding: 0; margin: 0;
@@ -77,17 +77,17 @@
 
         .sidebar-menu li { border-bottom: 1px solid rgba(0, 255, 0, 0.2); }
         .sidebar-menu li a {
-            display: block; padding: 15px 20px; color: var(--neon-green);
-            text-decoration: none; font-weight: bold; transition: 0.3s;
+            display: block; padding: 18px 20px; color: var(--neon-green);
+            text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s;
         }
         .sidebar-menu li a:hover, .sidebar-menu li a.active {
-            background: rgba(0, 255, 0, 0.2); border-left: 5px solid var(--neon-green);
+            background: rgba(0, 255, 0, 0.2); border-left: 5px solid var(--neon-green); font-size: 17px;
         }
 
         .logout-btn-side {
             background: #220000; color: var(--danger-red); text-align: center;
-            padding: 15px; border-top: 1px solid var(--danger-red); cursor: pointer;
-            font-weight: bold; transition: 0.3s;
+            padding: 18px; border-top: 1px solid var(--danger-red); cursor: pointer;
+            font-weight: bold; font-size: 16px; transition: 0.3s;
         }
         .logout-btn-side:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
 
@@ -95,80 +95,84 @@
            MAIN CONTENT AREA
            --------------------------------- */
         .main-content {
-            flex: 1; padding: 20px; overflow-y: auto;
+            flex: 1; padding: 25px; overflow-y: auto;
         }
 
         /* Top Stats Grid */
         .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px;
         }
         .stat-card {
             background: rgba(0, 0, 0, 0.8); border: 1px solid var(--neon-green);
-            padding: 15px; border-radius: 5px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+            padding: 20px; border-radius: 5px; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
             display: flex; align-items: center; justify-content: space-between;
         }
-        .stat-info h4 { margin: 0; font-size: 12px; color: #aaa; text-transform: uppercase; }
-        .stat-info span { font-size: 20px; font-weight: bold; color: var(--gold); }
+        .stat-info h4 { margin: 0 0 5px 0; font-size: 14px; color: #aaa; text-transform: uppercase; }
+        .stat-info span { font-size: 24px; font-weight: bold; color: var(--gold); }
+        .stat-card div:last-child { font-size: 30px; } /* Icon Size */
 
-        /* Platform Badges (Instagram, Facebook etc) */
+        /* Platform Badges */
         .platform-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px;
         }
         .platform-btn {
             background: var(--dark-green); border: 1px solid var(--border-green);
-            color: var(--neon-green); padding: 10px; text-align: center;
-            cursor: pointer; transition: 0.3s; font-size: 14px; text-transform: uppercase;
+            color: var(--neon-green); padding: 12px; text-align: center;
+            cursor: pointer; transition: 0.3s; font-size: 15px; font-weight: bold; text-transform: uppercase;
         }
         .platform-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-green); }
-
-        /* Form and Notes Layout (Split Screen) */
-        .order-layout {
-            display: flex; gap: 20px;
+        
+        /* Coming Soon platforms styling */
+        .platform-btn.disabled {
+            opacity: 0.5; cursor: not-allowed; border-color: #333; color: #777; background: #0a0a0a;
         }
+        .platform-btn.disabled:hover { box-shadow: none; background: #111; color: var(--danger-red); }
+
+        /* Form and Notes Layout */
+        .order-layout { display: flex; gap: 25px; }
 
         /* Left side - Form */
         .order-panel {
             flex: 6; background: rgba(0, 0, 0, 0.85);
-            border: 1px solid var(--neon-green); padding: 20px; border-radius: 5px;
+            border: 1px solid var(--neon-green); padding: 25px; border-radius: 5px;
         }
-        .order-panel h3 { margin-top: 0; border-bottom: 1px dashed var(--neon-green); padding-bottom: 10px; }
+        .order-panel h3 { margin-top: 0; font-size: 20px; border-bottom: 1px dashed var(--neon-green); padding-bottom: 15px; }
 
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #ccc; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 16px; color: #ccc; font-weight: bold;}
         .input-group select, .input-group input {
-            width: 100%; padding: 10px; background: #001100;
+            width: 100%; padding: 12px; background: #001100;
             border: 1px solid var(--border-green); color: var(--neon-green);
-            font-family: 'Courier New', Courier, monospace; outline: none; box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace; font-size: 16px; outline: none; box-sizing: border-box;
         }
-        .input-group select:focus, .input-group input:focus { border-color: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+        .input-group select:focus, .input-group input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
 
-        /* Description Box (Read Before Order) */
+        /* Description Box */
         .desc-box {
             background: rgba(255, 170, 0, 0.1); border: 1px dashed var(--gold);
-            padding: 10px; font-size: 12px; margin-bottom: 15px; color: #ccc;
+            padding: 15px; font-size: 15px; margin-bottom: 20px; color: #ccc; line-height: 1.6;
         }
-        .desc-box span { color: var(--gold); font-weight: bold; display: block; margin-bottom: 5px;}
+        .desc-box span { color: var(--gold); font-size: 16px; font-weight: bold; display: block; margin-bottom: 5px;}
 
         .submit-btn {
-            width: 100%; padding: 12px; background: #003300;
+            width: 100%; padding: 15px; background: #003300;
             border: 1px solid var(--neon-green); color: var(--neon-green);
-            font-size: 16px; font-weight: bold; cursor: pointer;
-            font-family: 'Courier New', Courier, monospace; text-transform: uppercase; transition: 0.3s;
+            font-size: 18px; font-weight: bold; cursor: pointer;
+            font-family: 'Courier New', Courier, monospace; text-transform: uppercase; transition: 0.3s; margin-top: 10px;
         }
-        .submit-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+        .submit-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
 
-        /* Right side - Notes / Guide */
+        /* Right side - Notes */
         .notes-panel {
             flex: 4; background: rgba(50, 0, 0, 0.3);
-            border: 1px solid var(--danger-red); padding: 20px; border-radius: 5px;
+            border: 1px solid var(--danger-red); padding: 25px; border-radius: 5px;
         }
-        .notes-panel h3 { margin-top: 0; color: var(--danger-red); border-bottom: 1px dashed var(--danger-red); padding-bottom: 10px; }
-        .notes-panel p { font-size: 14px; line-height: 1.5; color: #ff9999; }
-        .notes-panel ol { padding-left: 20px; font-size: 13px; color: #ffcccc;}
-        .notes-panel li { margin-bottom: 10px; }
+        .notes-panel h3 { margin-top: 0; font-size: 20px; color: var(--danger-red); border-bottom: 1px dashed var(--danger-red); padding-bottom: 15px; }
+        .notes-panel p { font-size: 16px; line-height: 1.6; color: #ff9999; }
+        .notes-panel ol { padding-left: 20px; font-size: 15px; color: #ffcccc; line-height: 1.6;}
+        .notes-panel li { margin-bottom: 12px; }
 
-        /* Responsive */
-        @media (max-width: 1000px) {
+        @media (max-width: 1200px) {
             .order-layout { flex-direction: column; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .platform-grid { grid-template-columns: repeat(3, 1fr); }
@@ -186,16 +190,18 @@
     <div class="sidebar">
         <div class="sidebar-profile">
             <div class="avatar">👨‍💻</div>
-            <div class="username" id="displayUsername">NODE_USER</div>
+            <!-- Yaha Firebase se automatic naam update hoga -->
+            <div class="username" id="displayUsername">FETCHING...</div>
             <div class="wallet-badge">₹<span id="sideWalletBalance">0.00</span></div>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="#" class="active">> New Order</a></li>
-            <li><a href="#">> Bulk Order</a></li>
-            <li><a href="#">> Orders History</a></li>
-            <li><a href="#">> Services</a></li>
-            <li><a href="#">> Add Funds</a></li>
-            <li><a href="#">> Tickets Support <span style="color:var(--gold); float:right;">[0]</span></a></li>
+            <!-- Sidebar links connected to HTML pages -->
+            <li><a href="home.html" class="active">> New Order</a></li>
+            <li><a href="bulk.html">> Bulk Order</a></li>
+            <li><a href="history.html">> Orders History</a></li>
+            <li><a href="services.html">> Services</a></li>
+            <li><a href="addfunds.html">> Add Funds</a></li>
+            <li><a href="support.html">> Tickets Support <span style="color:var(--gold); float:right;">[0]</span></a></li>
         </ul>
         <div class="logout-btn-side" onclick="executeLogout()">
             [ TERMINATE SESSION ]
@@ -227,16 +233,19 @@
 
         <!-- Platform Selection Row -->
         <div class="platform-grid">
+            <!-- Active Platform -->
             <button class="platform-btn">Instagram</button>
-            <button class="platform-btn">Facebook</button>
-            <button class="platform-btn">YouTube</button>
-            <button class="platform-btn">Twitter</button>
-            <button class="platform-btn">Telegram</button>
-            <button class="platform-btn">TikTok</button>
-            <button class="platform-btn">LinkedIn</button>
-            <button class="platform-btn">WhatsApp</button>
-            <button class="platform-btn">Kick</button>
-            <button class="platform-btn">Everything</button>
+            
+            <!-- Disabled "Coming Soon" Platforms -->
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Facebook services are coming soon!')">Facebook</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: YouTube services are coming soon!')">YouTube</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Twitter services are coming soon!')">Twitter</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Telegram services are coming soon!')">Telegram</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: TikTok services are coming soon!')">TikTok</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: LinkedIn services are coming soon!')">LinkedIn</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: WhatsApp services are coming soon!')">WhatsApp</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Kick services are coming soon!')">Kick</button>
+            <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: More services are coming soon!')">Everything</button>
         </div>
 
         <!-- Form & Notes Split Layout -->
@@ -270,7 +279,7 @@
                         - Speed: 100k/day 🚀<br>
                         - Drop Rate: Low<br>
                         - Link Format: Profile Link / @username<br>
-                        <span style="color:var(--danger-red); margin-top:5px;">Your Account Must be Public 🔓</span>
+                        <span style="color:var(--danger-red); margin-top:8px;">Your Account Must be Public 🔓</span>
                     </div>
 
                     <div class="input-group">
@@ -284,14 +293,13 @@
                     </div>
 
                     <div class="input-group">
-                        <label>Quantity (Min: 100 - Max: 500000)</label>
-                        <!-- Added your calculator trigger here -->
-                        <input type="number" id="orderQuantity" min="100" max="500000" placeholder="Enter quantity" required onkeyup="calculatePrice()">
+                        <label>Quantity (Min: 1000 - Max: 500000)</label>
+                        <input type="number" id="orderQuantity" min="1000" max="500000" placeholder="Enter quantity (e.g. 100000)" required onkeyup="calculatePrice()">
                     </div>
 
                     <div class="input-group">
                         <label>Total Charge (₹)</label>
-                        <input type="text" id="totalCharge" value="0.00" readonly style="color:var(--gold); font-weight:bold; font-size:18px;">
+                        <input type="text" id="totalCharge" value="0.00" readonly style="color:var(--gold); font-weight:bold; font-size:20px;">
                     </div>
 
                     <button type="submit" class="submit-btn">EXECUTE_SUBMIT</button>
@@ -309,8 +317,8 @@
                     <li>Select «Follow and invite friends»</li>
                     <li>Turn OFF the «Flag for review» toggle switch.</li>
                 </ol>
-                <div style="margin-top: 20px; border-top: 1px dashed var(--danger-red); padding-top:10px;">
-                    <p style="color:#ff6666; font-size:12px;">* During heavy traffic, delivery speed might slow down.<br>* Do not place a new order for the same link until the current order is marked as completed.</p>
+                <div style="margin-top: 25px; border-top: 1px dashed var(--danger-red); padding-top:15px;">
+                    <p style="color:#ff6666; font-size:14px;">* During heavy traffic, delivery speed might slow down.<br>* Do not place a new order for the same link until the current order is marked as completed.</p>
                 </div>
             </div>
             
@@ -336,11 +344,10 @@
             e.preventDefault();
             const quantity = document.getElementById('orderQuantity').value;
             const price = parseFloat(document.getElementById('totalCharge').value);
-            // Updated to check sideWalletBalance ID
             const currentBalance = parseFloat(document.getElementById('sideWalletBalance').innerText);
 
             if (currentBalance < price) {
-                alert("ERROR: Insufficient funds in wallet! Please add ₹" + (price - currentBalance).toFixed(2) + " more.");
+                alert("ERROR: Insufficient funds in wallet! Please add ₹" + (price - currentBalance).toFixed(2) + " more in the Add Funds section.");
             } else {
                 alert("ORDER ACCEPTED! Quantity: " + quantity + " | Charge: ₹" + price + "\n\n(Backend API logic pending)");
             }
@@ -379,12 +386,12 @@
                 onValue(userRef, (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
-                        // Username update (Agar naam hai toh pehla word le lo)
+                        // Username update (First name nikal kar display karega)
                         if(data.fullName) {
                             document.getElementById('displayUsername').innerText = data.fullName.split(" ")[0];
                         }
                         
-                        // Wallet Balance update (dono jagah - sidebar aur top card)
+                        // Wallet Balance update
                         if (data.walletBalance !== undefined) {
                             const bal = data.walletBalance.toFixed(2);
                             document.getElementById('sideWalletBalance').innerText = bal;
