@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reach Booster - Add Funds</title>
+    <style>
+        /* Advance Coding Background Theme */
+        :root {
+            --bg-dark: #050505;
+            --neon-green: #00ff00;
+            --dark-green: #002200;
+            --border-green: #008800;
+            --danger-red: #ff3333;
+            --gold: #ffaa00;
+            --phonepe-purple: #5f259f; /* PhonePe Brand Color */
+        }
+
+        body {
+            background-color: var(--bg-dark); color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace; margin: 0; padding: 0;
+            display: flex; height: 100vh; overflow: hidden;
+            background-image: radial-gradient(circle, var(--dark-green) 10%, transparent 10%), radial-gradient(circle, var(--dark-green) 10%, transparent 10%);
+            background-size: 20px 20px; background-position: 0 0, 10px 10px;
+        }
+
+        /* Loading Screen & Alerts */
+        #loadingScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; color: var(--neon-green); display: flex;
+            justify-content: center; align-items: center; z-index: 3000; font-size: 24px; font-weight: bold;
+        }
+
+        .premium-alert-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 4000; opacity: 0; visibility: hidden; transition: 0.3s ease;
+        }
+        .premium-alert-overlay.show { opacity: 1; visibility: visible; }
+        .premium-alert-box {
+            background: #0a0a0a; border: 2px solid var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+            border-radius: 8px; width: 90%; max-width: 420px; padding: 25px; text-align: center;
+            transform: scale(0.8) translateY(-30px); transition: 0.4s;
+        }
+        .premium-alert-overlay.show .premium-alert-box { transform: scale(1) translateY(0); }
+        .premium-alert-box.error { border-color: var(--danger-red); box-shadow: 0 0 20px rgba(255, 51, 51, 0.4); }
+        .premium-alert-box h3 { color: var(--neon-green); font-size: 22px; border-bottom: 1px dashed var(--neon-green); padding-bottom: 15px; margin-top: 0; }
+        .premium-alert-box.error h3 { color: var(--danger-red); border-bottom-color: var(--danger-red); }
+        .premium-alert-box p { font-size: 16px; line-height: 1.6; color: #fff; margin-bottom: 25px; white-space: pre-line; }
+        .premium-alert-box button {
+            background: rgba(0, 255, 0, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green);
+            padding: 12px 25px; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .premium-alert-box.error button { background: rgba(255, 51, 51, 0.1); color: var(--danger-red); border-color: var(--danger-red); }
+        .premium-alert-box button:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+        .premium-alert-box.error button:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
+
+        /* Sidebar & Mobile Header */
+        .sidebar { width: 280px; background: rgba(0, 15, 0, 0.95); border-right: 2px solid var(--border-green); display: flex; flex-direction: column; z-index: 200; transition: transform 0.3s; }
+        .sidebar-profile { padding: 25px 20px; text-align: center; border-bottom: 1px dashed var(--border-green); background: rgba(0, 255, 0, 0.05); }
+        .avatar { width: 70px; height: 70px; background: var(--dark-green); border: 2px solid var(--neon-green); border-radius: 50%; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; font-size: 35px; box-shadow: 0 0 10px var(--neon-green); }
+        .username { color: var(--gold); font-weight: bold; font-size: 20px; margin-bottom: 8px; }
+        .wallet-badge { background: var(--gold); color: #000; padding: 6px 12px; font-weight: bold; border-radius: 3px; display: inline-block; }
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
+        .sidebar-menu li { border-bottom: 1px solid rgba(0, 255, 0, 0.2); }
+        .sidebar-menu li a { display: block; padding: 18px 20px; color: var(--neon-green); text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active { background: rgba(0, 255, 0, 0.2); border-left: 5px solid var(--neon-green); }
+        .logout-btn-side { background: #220000; color: var(--danger-red); text-align: center; padding: 18px; border-top: 1px solid var(--danger-red); cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .logout-btn-side:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 150; backdrop-filter: blur(2px); }
+
+        .content-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .mobile-header { display: none; background: rgba(0, 15, 0, 0.95); border-bottom: 2px solid var(--border-green); padding: 15px 20px; justify-content: space-between; z-index: 100; }
+        .menu-btn { background: var(--dark-green); color: var(--neon-green); border: 1px solid var(--neon-green); padding: 8px 12px; font-family: inherit; font-weight: bold; cursor: pointer; }
+        .mobile-logo { color: var(--gold); font-size: 18px; font-weight: bold; }
+        .main-content { flex: 1; padding: 25px; overflow-y: auto; }
+
+        /* Add Funds Specific Layout */
+        .page-title { color: var(--gold); font-size: 24px; border-bottom: 2px dashed var(--gold); padding-bottom: 10px; margin-bottom: 25px; text-shadow: 0 0 10px rgba(255,170,0,0.5); }
+        .fund-layout { display: flex; gap: 25px; }
+
+        .fund-panel { flex: 6; background: rgba(0, 0, 0, 0.85); border: 1px solid var(--phonepe-purple); padding: 25px; border-radius: 8px; box-shadow: inset 0 0 15px rgba(95, 37, 159, 0.2); }
+        .fund-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px dashed var(--phonepe-purple); padding-bottom: 15px; display: flex; align-items: center; justify-content: space-between;}
+        .gateway-badge { background: var(--phonepe-purple); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 14px; text-shadow: none; }
+
+        .input-group { margin-bottom: 25px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 16px; color: #ccc; font-weight: bold;}
+        .input-group input { width: 100%; padding: 15px; background: #0a0a0a; border: 2px solid #333; color: var(--gold); font-family: inherit; font-size: 20px; font-weight: bold; outline: none; box-sizing: border-box; transition: 0.3s;}
+        .input-group input:focus { border-color: var(--phonepe-purple); box-shadow: 0 0 15px rgba(95, 37, 159, 0.5); }
+
+        .quick-amounts { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .quick-btn { flex: 1; min-width: 80px; background: rgba(255, 170, 0, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 10px; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .quick-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
+
+        .pay-btn { width: 100%; padding: 18px; background: var(--phonepe-purple); border: none; color: #fff; font-size: 20px; font-weight: bold; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: 0.3s; border-radius: 4px; }
+        .pay-btn:hover { background: #7b31cc; box-shadow: 0 0 20px rgba(123, 49, 204, 0.8); }
+
+        .info-panel { flex: 4; background: rgba(0, 30, 0, 0.5); border: 1px solid var(--border-green); padding: 25px; border-radius: 8px; }
+        .info-panel h3 { margin-top: 0; color: var(--neon-green); border-bottom: 1px dashed var(--neon-green); padding-bottom: 15px; }
+        .info-panel ul { padding-left: 20px; color: #ccc; line-height: 1.8; }
+        .info-panel li { margin-bottom: 15px; }
+        .info-panel strong { color: var(--gold); }
+
+        @media (max-width: 900px) { .fund-layout { flex-direction: column; } }
+        @media (max-width: 768px) {
+            .mobile-header { display: flex; }
+            .sidebar { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            .main-content { padding: 15px; }
+            .fund-panel, .info-panel { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loadingScreen">> SYSTEM_AUTHENTICATING...</div>
+
+    <!-- Alert Box -->
+    <div class="premium-alert-overlay" id="customAlertOverlay">
+        <div class="premium-alert-box" id="customAlertBox">
+            <h3 id="alertTitle">SYSTEM NOTICE</h3>
+            <p id="alertMessage">Message goes here...</p>
+            <button onclick="closeAlert()">ACKNOWLEDGE</button>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <div class="avatar">👨‍💻</div>
+            <div class="username" id="displayUsername">FETCHING...</div>
+            <div class="wallet-badge">₹<span id="sideWalletBalance">0.00</span></div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="home.html">> New Order</a></li>
+            <li><a href="bulk.html">> Bulk Order</a></li>
+            <li><a href="history.html">> Orders History</a></li>
+            <li><a href="services.html">> Services</a></li>
+            <li><a href="addfunds.html" class="active">> Add Funds</a></li>
+            <li><a href="referral.html">> Refer & Earn <span style="float:right;">[💰]</span></a></li>
+            <li><a href="support.html">> Tickets Support <span style="color:var(--gold); float:right;">[0]</span></a></li>
+        </ul>
+        <div class="logout-btn-side" onclick="executeLogout()">[ TERMINATE SESSION ]</div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="mobile-header">
+            <button class="menu-btn" onclick="toggleSidebar()">☰ MENU</button>
+            <div class="mobile-logo">REACH BOOSTER</div>
+        </div>
+
+        <div class="main-content">
+            <h2 class="page-title">> ADD_FUNDS_TO_WALLET</h2>
+
+            <div class="fund-layout">
+                
+                <!-- Left: Payment Form -->
+                <div class="fund-panel">
+                    <h3>SECURE PAYMENT GATEWAY <span class="gateway-badge">PhonePe Business Verified ✓</span></h3>
+                    
+                    <form onsubmit="initiatePayment(event)">
+                        <div class="input-group">
+                            <label>Enter Amount (₹)</label>
+                            <input type="number" id="fundAmount" placeholder="Min: ₹10" min="10" required>
+                        </div>
+
+                        <div class="quick-amounts">
+                            <button type="button" class="quick-btn" onclick="setAmount(100)">₹100</button>
+                            <button type="button" class="quick-btn" onclick="setAmount(500)">₹500</button>
+                            <button type="button" class="quick-btn" onclick="setAmount(1000)">₹1000</button>
+                            <button type="button" class="quick-btn" onclick="setAmount(5000)">₹5000</button>
+                        </div>
+
+                        <button type="submit" class="pay-btn">PROCEED TO PAY ➔</button>
+                    </form>
+                </div>
+
+                <!-- Right: Instructions -->
+                <div class="info-panel">
+                    <h3>[i] PAYMENT INSTRUCTIONS</h3>
+                    <ul>
+                        <li><strong>Minimum Deposit:</strong> ₹10 is the strictly minimum amount allowed by the system.</li>
+                        <li><strong>Supported Methods:</strong> All UPI Apps (PhonePe, GPay, Paytm) are supported via our secure gateway.</li>
+                        <li><strong>Instant Auto-Load:</strong> Funds are added to your wallet automatically within <strong>5-10 seconds</strong> after a successful transaction.</li>
+                        <li><strong>Warning:</strong> <span style="color:var(--danger-red);">Do not refresh or press the back button</span> while the payment is processing.</li>
+                        <li>If amount is deducted but not added to wallet, kindly generate a support ticket with your Transaction ID.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Scripts -->
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function showPremiumAlert(title, message, isError = false) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            const box = document.getElementById('customAlertBox');
+            isError ? box.classList.add('error') : box.classList.remove('error');
+            document.getElementById('customAlertOverlay').classList.add('show');
+        }
+
+        function closeAlert() { document.getElementById('customAlertOverlay').classList.remove('show'); }
+
+        function setAmount(val) {
+            document.getElementById('fundAmount').value = val;
+        }
+
+        // ==========================================
+        // PAYMENT GATEWAY TRIGGER
+        // ==========================================
+        function initiatePayment(e) {
+            e.preventDefault();
+            const amount = parseInt(document.getElementById('fundAmount').value);
+
+            if (!amount || amount < 10) {
+                showPremiumAlert("TRANSACTION FAILED", "Minimum deposit amount is ₹10.\nPlease increase the amount.", true);
+                return;
+            }
+
+            // YAHAN PAR TUMHARA PHONEPE BUSINESS GATEWAY KA CODE AAYEGA
+            // For now, it shows a success/redirect message.
+            showPremiumAlert("GATEWAY INITIATED", "Establishing secure connection with PhonePe Business Gateway...\n\nRedirecting to pay ₹" + amount + "...", false);
+            
+            // Example of redirecting to a payment API endpoint:
+            // window.location.href = "https://your-backend.com/pay?amount=" + amount + "&uid=" + firebaseAuthUID;
+        }
+    </script>
+
+    <!-- FIREBASE MODULE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAFpOWJlCYTvlhVijnyOPeVn0wCw7Ev5tI",
+            authDomain: "my-cozy-farm.firebaseapp.com",
+            databaseURL: "https://my-cozy-farm-default-rtdb.firebaseio.com",
+            projectId: "my-cozy-farm",
+            storageBucket: "my-cozy-farm.firebasestorage.app",
+            messagingSenderId: "680824081334",
+            appId: "1:680824081334:web:535cdcb9acdf2fda2d4f17",
+            measurementId: "G-LJQXPB6ERL"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        window.firebaseAuthUID = null; // Storing UID globally so payment API can use it
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('loadingScreen').style.display = 'none';
+                window.firebaseAuthUID = user.uid;
+
+                const userRef = ref(database, 'users/' + user.uid);
+                onValue(userRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        if(data.fullName) document.getElementById('displayUsername').innerText = data.fullName.split(" ")[0];
+                        if (data.walletBalance !== undefined) document.getElementById('sideWalletBalance').innerText = data.walletBalance.toFixed(2);
+                    }
+                });
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        window.executeLogout = function() {
+            signOut(auth).then(() => { window.location.href = "index.html"; }).catch((error) => { showPremiumAlert("SYSTEM ERROR", "Logout Failed: " + error.message, true); });
+        };
+    </script>
+</body>
+</html>
