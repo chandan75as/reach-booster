@@ -5,88 +5,102 @@ import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.4.0
 
 // Aapki Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAFpOWJlCYTvlhVijnyOPeVn0wCw7Ev5tI",
-  authDomain: "my-cozy-farm.firebaseapp.com",
-  databaseURL: "https://my-cozy-farm-default-rtdb.firebaseio.com",
-  projectId: "my-cozy-farm",
-  storageBucket: "my-cozy-farm.firebasestorage.app",
-  messagingSenderId: "680824081334",
-  appId: "1:680824081334:web:535cdcb9acdf2fda2d4f17",
-  measurementId: "G-LJQXPB6ERL"
+    apiKey: "AIzaSyAFpOWJlCYTvlhVijnyOPeVn0wCw7Ev5tI",
+    authDomain: "my-cozy-farm.firebaseapp.com",
+    databaseURL: "https://my-cozy-farm-default-rtdb.firebaseio.com",
+    projectId: "my-cozy-farm",
+    storageBucket: "my-cozy-farm.firebasestorage.app",
+    messagingSenderId: "680824081334",
+    appId: "1:680824081334:web:535cdcb9acdf2fda2d4f17",
+    measurementId: "G-LJQXPB6ERL"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+try {
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+    console.log("SYSTEM BOOT: Firebase initialized successfully.");
 
-// PERSISTENT LOGIN CHECK (Agar login hai toh sidha home par bhej dega)
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        window.location.href = "home.html";
-    }
-});
+    // PERSISTENT LOGIN CHECK
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log("Active user detected. Redirecting to dashboard...");
+            window.location.href = "home.html";
+        }
+    });
 
-// ==========================================
-// SIGNUP LOGIC
-// ==========================================
-window.processSignup = function(event) {
-    event.preventDefault();
-    
-    const isChecked = document.getElementById('agreeCheckbox').checked;
-    if(!isChecked) {
-        alert("ERROR: System Warnings accept karna zaroori hai!");
-        return false;
-    }
+    // ==========================================
+    // SIGNUP LOGIC
+    // ==========================================
+    window.processSignup = function(event) {
+        event.preventDefault();
+        console.log("Signup process initiated...");
+        
+        const isChecked = document.getElementById('agreeCheckbox').checked;
+        if(!isChecked) {
+            alert("ERROR: System Warnings accept karna zaroori hai!");
+            return false;
+        }
 
-    const fullName = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
-    const mobile = document.getElementById('regMobile').value;
-    const password = document.getElementById('regPass').value;
+        const fullName = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const mobile = document.getElementById('regMobile').value;
+        const password = document.getElementById('regPass').value;
 
-    alert("System Processing... Please wait.");
-
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            
-            // Database mein extra details save karna
-            set(ref(database, 'users/' + user.uid), {
-                fullName: fullName,
-                email: email,
-                mobile: mobile,
-                accountStatus: "Active",
-                walletBalance: 0, 
-                joinDate: new Date().toISOString()
+        // Firebase Authentication (Create Account)
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log("AUTH SUCCESS! User ID:", user.uid);
+                
+                // Database mein extra details save karna
+                set(ref(database, 'users/' + user.uid), {
+                    fullName: fullName,
+                    email: email,
+                    mobile: mobile,
+                    accountStatus: "Active",
+                    walletBalance: 0, 
+                    joinDate: new Date().toISOString()
+                })
+                .then(() => {
+                    console.log("DATABASE WRITE SUCCESS!");
+                    alert("ACCOUNT CREATED SUCCESSFULLY! Redirecting...");
+                    window.location.href = "home.html"; 
+                })
+                .catch((dbError) => {
+                    console.error("DATABASE ERROR:", dbError);
+                    alert("Account ban gaya, par Database me save nahi hua. Error: " + dbError.message + "\n\n(Bhai, Firebase ke Database Rules check karo, wo shayad 'false' par locked hain)");
+                });
             })
-            .then(() => {
-                alert("SYSTEM NODE CREATED! Redirecting to dashboard...");
-                window.location.href = "home.html"; // Signup ke baad direct login ho jayega
+            .catch((authError) => {
+                console.error("AUTH ERROR:", authError);
+                alert("SIGNUP FAILED: " + authError.message);
+            });
+    };
+
+    // ==========================================
+    // LOGIN LOGIC
+    // ==========================================
+    window.processLogin = function(event) {
+        event.preventDefault();
+        console.log("Login process initiated...");
+
+        const email = document.getElementById('logEmail').value;
+        const password = document.getElementById('logPass').value;
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                console.log("LOGIN SUCCESS!");
+                window.location.href = "home.html"; 
             })
             .catch((error) => {
-                alert("DATABASE ERROR: " + error.message);
+                console.error("LOGIN ERROR:", error);
+                alert("ACCESS DENIED: " + error.message);
             });
-        })
-        .catch((error) => {
-            alert("SIGNUP FAILED: " + error.message);
-        });
-};
+    };
 
-// ==========================================
-// LOGIN LOGIC
-// ==========================================
-window.processLogin = function(event) {
-    event.preventDefault();
-
-    const email = document.getElementById('logEmail').value;
-    const password = document.getElementById('logPass').value;
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Success hone par direct home.html par bhej dega
-            window.location.href = "home.html"; 
-        })
-        .catch((error) => {
-            alert("ACCESS DENIED: Invalid Email or Password.");
-        });
-};
+} catch (error) {
+    console.error("CRITICAL ERROR: Firebase connect nahi ho pa raha hai.", error);
+    alert("CRITICAL ERROR: Code load nahi hua. Right-click karke 'Inspect' -> 'Console' check karo.");
+}
