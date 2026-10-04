@@ -38,6 +38,40 @@
         }
 
         /* ---------------------------------
+           PREMIUM ALERT POPUP (NEW)
+           --------------------------------- */
+        .premium-alert-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 4000; opacity: 0; visibility: hidden; transition: 0.3s ease;
+        }
+        .premium-alert-overlay.show { opacity: 1; visibility: visible; }
+        .premium-alert-box {
+            background: #0a0a0a; border: 2px solid var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); border-radius: 8px;
+            width: 90%; max-width: 420px; padding: 25px; text-align: center;
+            transform: scale(0.8) translateY(-30px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .premium-alert-overlay.show .premium-alert-box { transform: scale(1) translateY(0); }
+        .premium-alert-box.error { border-color: var(--danger-red); box-shadow: 0 0 20px rgba(255, 51, 51, 0.4); }
+        
+        .premium-alert-box h3 { margin-top: 0; color: var(--neon-green); font-size: 22px; letter-spacing: 1px; border-bottom: 1px dashed var(--neon-green); padding-bottom: 15px; }
+        .premium-alert-box.error h3 { color: var(--danger-red); border-bottom-color: var(--danger-red); }
+        
+        .premium-alert-box p { font-size: 16px; line-height: 1.6; color: #fff; margin-bottom: 25px; white-space: pre-line; }
+        
+        .premium-alert-box button {
+            background: rgba(0, 255, 0, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green);
+            padding: 12px 25px; font-family: 'Courier New', Courier, monospace;
+            font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase;
+        }
+        .premium-alert-box.error button { background: rgba(255, 51, 51, 0.1); color: var(--danger-red); border-color: var(--danger-red); }
+        
+        .premium-alert-box button:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+        .premium-alert-box.error button:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
+
+        /* ---------------------------------
            SIDEBAR STYLES
            --------------------------------- */
         .sidebar {
@@ -47,35 +81,24 @@
             display: flex;
             flex-direction: column;
             box-shadow: 2px 0 15px rgba(0, 255, 0, 0.2);
-            z-index: 200; /* Increased for mobile overlap */
+            z-index: 200;
             transition: transform 0.3s ease;
         }
 
         .sidebar-profile {
-            padding: 25px 20px;
-            text-align: center;
-            border-bottom: 1px dashed var(--border-green);
-            background: rgba(0, 255, 0, 0.05);
+            padding: 25px 20px; text-align: center; border-bottom: 1px dashed var(--border-green); background: rgba(0, 255, 0, 0.05);
         }
 
         .avatar {
-            width: 70px; height: 70px;
-            background: var(--dark-green);
-            border: 2px solid var(--neon-green);
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            display: flex; justify-content: center; align-items: center;
+            width: 70px; height: 70px; background: var(--dark-green); border: 2px solid var(--neon-green);
+            border-radius: 50%; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center;
             font-size: 35px; box-shadow: 0 0 10px var(--neon-green);
         }
 
         .username { color: var(--gold); font-weight: bold; font-size: 20px; margin-bottom: 8px; text-transform: uppercase;}
         .wallet-badge { background: var(--gold); color: #000; padding: 6px 12px; font-size: 16px; font-weight: bold; border-radius: 3px; display: inline-block;}
 
-        .sidebar-menu {
-            list-style: none; padding: 0; margin: 0;
-            flex: 1; overflow-y: auto;
-        }
-
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; flex: 1; overflow-y: auto; }
         .sidebar-menu li { border-bottom: 1px solid rgba(0, 255, 0, 0.2); }
         .sidebar-menu li a {
             display: block; padding: 18px 20px; color: var(--neon-green);
@@ -92,7 +115,6 @@
         }
         .logout-btn-side:hover { background: var(--danger-red); color: #fff; box-shadow: 0 0 15px var(--danger-red); }
 
-        /* Sidebar Overlay for Mobile */
         .sidebar-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7); z-index: 150; backdrop-filter: blur(2px);
@@ -101,31 +123,24 @@
         /* ---------------------------------
            MAIN CONTENT AREA
            --------------------------------- */
-        .content-wrapper {
-            flex: 1; display: flex; flex-direction: column; overflow: hidden;
-        }
+        .content-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Mobile Header */
         .mobile-header {
             display: none; background: rgba(0, 15, 0, 0.95);
             border-bottom: 2px solid var(--border-green); padding: 15px 20px;
             align-items: center; justify-content: space-between; z-index: 100;
         }
         .menu-btn {
-            background: var(--dark-green); color: var(--neon-green);
-            border: 1px solid var(--neon-green); padding: 8px 12px;
-            font-family: 'Courier New', Courier, monospace; font-size: 16px;
-            font-weight: bold; cursor: pointer;
+            background: var(--dark-green); color: var(--neon-green); border: 1px solid var(--neon-green);
+            padding: 8px 12px; font-family: 'Courier New', Courier, monospace; font-size: 16px; font-weight: bold; cursor: pointer;
         }
         .mobile-logo { color: var(--gold); font-size: 18px; font-weight: bold; text-shadow: 0 0 5px var(--gold); }
 
-        .main-content {
-            flex: 1; padding: 25px; overflow-y: auto;
-        }
+        .main-content { flex: 1; padding: 25px; overflow-y: auto; }
 
-        /* Top Stats Grid */
+        /* Top Stats Grid (Updated to 3 columns) */
         .stats-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;
         }
         .stat-card {
             background: rgba(0, 0, 0, 0.8); border: 1px solid var(--neon-green);
@@ -134,28 +149,19 @@
         }
         .stat-info h4 { margin: 0 0 5px 0; font-size: 14px; color: #aaa; text-transform: uppercase; }
         .stat-info span { font-size: 24px; font-weight: bold; color: var(--gold); }
-        .stat-card div:last-child { font-size: 30px; } /* Icon Size */
+        .stat-card div:last-child { font-size: 30px; }
 
-        /* Platform Badges */
-        .platform-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px;
-        }
+        .platform-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
         .platform-btn {
-            background: var(--dark-green); border: 1px solid var(--border-green);
-            color: var(--neon-green); padding: 12px; text-align: center;
-            cursor: pointer; transition: 0.3s; font-size: 15px; font-weight: bold; text-transform: uppercase;
+            background: var(--dark-green); border: 1px solid var(--border-green); color: var(--neon-green);
+            padding: 12px; text-align: center; cursor: pointer; transition: 0.3s; font-size: 15px; font-weight: bold; text-transform: uppercase;
         }
         .platform-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 10px var(--neon-green); }
-        
-        .platform-btn.disabled {
-            opacity: 0.5; cursor: not-allowed; border-color: #333; color: #777; background: #0a0a0a;
-        }
+        .platform-btn.disabled { opacity: 0.5; cursor: not-allowed; border-color: #333; color: #777; background: #0a0a0a; }
         .platform-btn.disabled:hover { box-shadow: none; background: #111; color: var(--danger-red); }
 
-        /* Form and Notes Layout */
         .order-layout { display: flex; gap: 25px; }
 
-        /* Left side - Form */
         .order-panel {
             flex: 6; background: rgba(0, 0, 0, 0.85);
             border: 1px solid var(--neon-green); padding: 25px; border-radius: 5px;
@@ -171,37 +177,31 @@
         }
         .input-group select:focus, .input-group input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
 
-        /* Description Box */
         .desc-box {
             background: rgba(255, 170, 0, 0.1); border: 1px dashed var(--gold);
-            padding: 15px; font-size: 15px; margin-bottom: 20px; color: #ccc; line-height: 1.6;
+            padding: 15px; font-size: 15px; margin-bottom: 20px; color: #fff; line-height: 1.6;
         }
         .desc-box span { color: var(--gold); font-size: 16px; font-weight: bold; display: block; margin-bottom: 5px;}
 
         .submit-btn {
-            width: 100%; padding: 15px; background: #003300;
-            border: 1px solid var(--neon-green); color: var(--neon-green);
-            font-size: 18px; font-weight: bold; cursor: pointer;
+            width: 100%; padding: 15px; background: #003300; border: 1px solid var(--neon-green);
+            color: var(--neon-green); font-size: 18px; font-weight: bold; cursor: pointer;
             font-family: 'Courier New', Courier, monospace; text-transform: uppercase; transition: 0.3s; margin-top: 10px;
         }
         .submit-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
 
-        /* Right side - Notes */
+        /* RIGHT PANEL: Fix Text Colors for Clarity */
         .notes-panel {
-            flex: 4; background: rgba(50, 0, 0, 0.3);
+            flex: 4; background: rgba(50, 0, 0, 0.4);
             border: 1px solid var(--danger-red); padding: 25px; border-radius: 5px;
         }
-        .notes-panel h3 { margin-top: 0; font-size: 20px; color: var(--danger-red); border-bottom: 1px dashed var(--danger-red); padding-bottom: 15px; }
-        .notes-panel p { font-size: 16px; line-height: 1.6; color: #ff9999; }
-        .notes-panel ol { padding-left: 20px; font-size: 15px; color: #ffcccc; line-height: 1.6;}
+        .notes-panel h3 { margin-top: 0; font-size: 20px; color: var(--danger-red); border-bottom: 1px dashed var(--danger-red); padding-bottom: 15px; text-shadow: 0 0 5px var(--danger-red); }
+        .notes-panel p { font-size: 16px; line-height: 1.6; color: #ffffff; /* Bright White */ font-weight: 500; }
+        .notes-panel ol { padding-left: 20px; font-size: 15px; color: #ffffff; line-height: 1.7; font-weight: 500;}
         .notes-panel li { margin-bottom: 12px; }
 
-        /* =========================================
-           RESPONSIVE MEDIA QUERIES (Mobile & Tablet)
-           ========================================= */
         @media (max-width: 1200px) {
             .order-layout { flex-direction: column; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .platform-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
@@ -211,14 +211,9 @@
 
         @media (max-width: 768px) {
             .mobile-header { display: flex; }
-            
-            .sidebar {
-                position: fixed; top: 0; bottom: 0; left: 0;
-                transform: translateX(-100%); /* Hidden by default on mobile */
-            }
+            .sidebar { position: fixed; top: 0; bottom: 0; left: 0; transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
             .sidebar-overlay.active { display: block; }
-            
             .main-content { padding: 15px; }
             .stats-grid { grid-template-columns: 1fr; gap: 15px; }
             .platform-grid { grid-template-columns: repeat(2, 1fr); }
@@ -238,6 +233,15 @@
         > SYSTEM_AUTHENTICATING...
     </div>
 
+    <!-- 🌟 PREMIUM ALERT BOX 🌟 -->
+    <div class="premium-alert-overlay" id="customAlertOverlay">
+        <div class="premium-alert-box" id="customAlertBox">
+            <h3 id="alertTitle">SYSTEM NOTICE</h3>
+            <p id="alertMessage">Message goes here...</p>
+            <button onclick="closeAlert()">ACKNOWLEDGE</button>
+        </div>
+    </div>
+
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
@@ -254,6 +258,8 @@
             <li><a href="history.html">> Orders History</a></li>
             <li><a href="services.html">> Services</a></li>
             <li><a href="addfunds.html">> Add Funds</a></li>
+            <!-- New Referral Button Added Here -->
+            <li><a href="referral.html">> Refer & Earn <span style="float:right;">[💰]</span></a></li>
             <li><a href="support.html">> Tickets Support <span style="color:var(--gold); float:right;">[0]</span></a></li>
         </ul>
         <div class="logout-btn-side" onclick="executeLogout()">
@@ -264,7 +270,7 @@
     <!-- MAIN DASHBOARD WRAPPER -->
     <div class="content-wrapper">
         
-        <!-- Mobile Header (Visible Only on Small Screens) -->
+        <!-- Mobile Header -->
         <div class="mobile-header">
             <button class="menu-btn" onclick="toggleSidebar()">☰ MENU</button>
             <div class="mobile-logo">REACH BOOSTER</div>
@@ -272,33 +278,29 @@
 
         <div class="main-content">
             
-            <!-- Top Stats Row -->
+            <!-- Top Stats Row (Updated: Removed System Status, Added 757465 Orders) -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-info"><h4>My Balance</h4><span>₹<span id="topWalletBalance">0.00</span></span></div>
                     <div>💰</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-info"><h4>Total Orders</h4><span style="color:var(--neon-green);">0</span></div>
+                    <div class="stat-info"><h4>Total Orders</h4><span style="color:var(--neon-green);">757465</span></div>
                     <div>📋</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-info"><h4>Spent Balance</h4><span style="color:var(--danger-red);">₹0.00</span></div>
                     <div>💸</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-info"><h4>System Status</h4><span style="color:#00ffff;">ONLINE_</span></div>
-                    <div>📡</div>
-                </div>
             </div>
 
-            <!-- Platform Selection Row -->
+            <!-- Platform Selection Row (Using Premium Alert) -->
             <div class="platform-grid">
                 <button class="platform-btn">Instagram</button>
-                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Facebook services are coming soon!')">Facebook</button>
-                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: YouTube services are coming soon!')">YouTube</button>
-                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Twitter services are coming soon!')">Twitter</button>
-                <button class="platform-btn disabled" onclick="alert('SYSTEM NOTICE: Telegram services are coming soon!')">Telegram</button>
+                <button class="platform-btn disabled" onclick="showPremiumAlert('MODULE LOCKED', 'Facebook services will be available in the next system update.', true)">Facebook</button>
+                <button class="platform-btn disabled" onclick="showPremiumAlert('MODULE LOCKED', 'YouTube services will be available in the next system update.', true)">YouTube</button>
+                <button class="platform-btn disabled" onclick="showPremiumAlert('MODULE LOCKED', 'Twitter services will be available in the next system update.', true)">Twitter</button>
+                <button class="platform-btn disabled" onclick="showPremiumAlert('MODULE LOCKED', 'Telegram services will be available in the next system update.', true)">Telegram</button>
             </div>
 
             <!-- Form & Notes Split Layout -->
@@ -325,7 +327,6 @@
                             </select>
                         </div>
 
-                        <!-- Description Box (Terminal Style) -->
                         <div class="desc-box">
                             <span>[!] SYSTEM INSTRUCTIONS:</span>
                             - Location: Global<br>
@@ -345,9 +346,10 @@
                             <input type="url" id="targetLink" placeholder="https://instagram.com/..." required>
                         </div>
 
+                        <!-- Minimum limit updated to 5000 -->
                         <div class="input-group">
-                            <label>Quantity (Min: 1000 - Max: 500000)</label>
-                            <input type="number" id="orderQuantity" min="1000" max="500000" placeholder="Enter quantity (e.g. 100000)" required onkeyup="calculatePrice()">
+                            <label>Quantity (Min: 5000 - Max: 500000)</label>
+                            <input type="number" id="orderQuantity" min="5000" max="500000" placeholder="Enter quantity (Min: 5000)" required onkeyup="calculatePrice()">
                         </div>
 
                         <div class="input-group">
@@ -359,7 +361,7 @@
                     </form>
                 </div>
 
-                <!-- RIGHT: Important Notes Guide -->
+                <!-- RIGHT: Important Notes Guide (Bright Text Applied) -->
                 <div class="notes-panel">
                     <h3>[!] SYSTEM WARNINGS</h3>
                     <p><strong>Attention!</strong><br>
@@ -371,7 +373,7 @@
                         <li>Turn OFF the «Flag for review» toggle switch.</li>
                     </ol>
                     <div style="margin-top: 25px; border-top: 1px dashed var(--danger-red); padding-top:15px;">
-                        <p style="color:#ff6666; font-size:14px;">* During heavy traffic, delivery speed might slow down.<br>* Do not place a new order for the same link until the current order is marked as completed.</p>
+                        <p style="color:#ffdddd; font-size:15px; font-weight: bold;">* During heavy traffic, delivery speed might slow down.<br><br>* Do not place a new order for the same link until the current order is marked as completed.</p>
                     </div>
                 </div>
                 
@@ -385,6 +387,25 @@
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        // --- PREMIUM ALERT LOGIC ---
+        function showPremiumAlert(title, message, isError = false) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            
+            const box = document.getElementById('customAlertBox');
+            if(isError) {
+                box.classList.add('error');
+            } else {
+                box.classList.remove('error');
+            }
+            
+            document.getElementById('customAlertOverlay').classList.add('show');
+        }
+
+        function closeAlert() {
+            document.getElementById('customAlertOverlay').classList.remove('show');
         }
 
         // Calculator
@@ -403,14 +424,22 @@
         // Form Submit
         function submitOrder(e) {
             e.preventDefault();
-            const quantity = document.getElementById('orderQuantity').value;
+            const quantity = parseInt(document.getElementById('orderQuantity').value);
             const price = parseFloat(document.getElementById('totalCharge').value);
             const currentBalance = parseFloat(document.getElementById('sideWalletBalance').innerText);
 
+            // Double check for minimum quantity
+            if (quantity < 5000) {
+                showPremiumAlert("INVALID INPUT", "Minimum order quantity is 5000.\nPlease increase the quantity.", true);
+                return;
+            }
+
+            // Wallet Check
             if (currentBalance < price) {
-                alert("ERROR: Insufficient funds in wallet! Please add ₹" + (price - currentBalance).toFixed(2) + " more in the Add Funds section.");
+                let shortAmount = (price - currentBalance).toFixed(2);
+                showPremiumAlert("TRANSACTION FAILED", "Insufficient funds in your wallet.\nPlease add ₹" + shortAmount + " more to proceed.", true);
             } else {
-                alert("ORDER ACCEPTED! Quantity: " + quantity + " | Charge: ₹" + price + "\n\n(Backend API logic pending)");
+                showPremiumAlert("ORDER ACCEPTED", "Target Quantity: " + quantity + "\nTotal Charge: ₹" + price + "\n\nSystem will process this request shortly.", false);
             }
         }
     </script>
@@ -463,7 +492,7 @@
             signOut(auth).then(() => {
                 window.location.href = "index.html";
             }).catch((error) => {
-                alert("Error logging out: " + error.message);
+                showPremiumAlert("SYSTEM ERROR", "Logout Failed: " + error.message, true);
             });
         };
     </script>
