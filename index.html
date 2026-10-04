@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reach Buster - Advanced Access</title>
+    <style>
+        /* Advance Coding Background Theme (Hacker Style) */
+        body {
+            background-color: #050505;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle, #002200 10%, transparent 10%),
+                radial-gradient(circle, #002200 10%, transparent 10%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+
+        .terminal-container {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 15px #00ff00, inset 0 0 10px #00ff00;
+            width: 100%;
+            max-width: 550px;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #00ff00;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #008800;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            transition: 0.3s;
+            width: 50%;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+            border-bottom: 3px solid #00ff00;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: #001100;
+            border: 1px solid #008800;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #00ff00;
+            box-shadow: 0 0 8px #00ff00;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #003300;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        /* Safety Rules Section */
+        .safety-rules {
+            margin-top: 35px;
+            padding: 15px;
+            border: 1px solid #ff3333;
+            background: rgba(50, 0, 0, 0.4);
+            color: #ff6666;
+            font-size: 13px;
+            box-shadow: inset 0 0 10px rgba(255, 51, 51, 0.2);
+        }
+
+        .safety-rules h3 {
+            color: #ff3333;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px dashed #ff3333;
+            padding-bottom: 10px;
+            text-shadow: 0 0 5px #ff3333;
+        }
+
+        .rules-scroll {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rules-scroll::-webkit-scrollbar { width: 5px; }
+        .rules-scroll::-webkit-scrollbar-thumb { background: #ff3333; }
+
+        .safety-rules ol { padding-left: 20px; margin: 0; }
+        .safety-rules li { margin-bottom: 12px; line-height: 1.4; }
+        .safety-rules strong { color: #ff3333; text-decoration: underline; }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            color: #ff3333;
+            font-weight: bold;
+            font-size: 14px;
+            border-top: 1px dashed #ff3333;
+            padding-top: 10px;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #ff3333;
+        }
+
+        /* ========================================= */
+        /* PREMIUM POPUP CSS (GOLD & HACKER THEME)   */
+        /* ========================================= */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.5s ease-in-out;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-box {
+            background: #0a0a0a;
+            border: 2px solid #ffaa00;
+            box-shadow: 0 0 25px rgba(255, 170, 0, 0.4), inset 0 0 15px rgba(255, 170, 0, 0.2);
+            width: 90%;
+            max-width: 450px;
+            border-radius: 12px;
+            padding: 25px;
+            transform: scale(0.7) translateY(-50px);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #fff;
+            position: relative;
+        }
+
+        .popup-overlay.show .popup-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .popup-header {
+            text-align: center;
+            border-bottom: 1px dashed #ffaa00;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .popup-header h2 {
+            margin: 0;
+            color: #ffaa00;
+            font-size: 24px;
+            text-shadow: 0 0 10px #ffaa00;
+        }
+
+        .popup-header span {
+            color: #fff;
+            font-size: 14px;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .popup-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #cccccc;
+        }
+
+        .popup-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 25px;
+        }
+
+        .popup-features li {
+            margin-bottom: 10px;
+            color: #00ff00;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .popup-features li::before {
+            content: "[+] ";
+            color: #ffaa00;
+        }
+
+        .popup-close-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .popup-close-btn:hover {
+            background: #ffaa00;
+            color: #000;
+            box-shadow: 0 0 20px #ffaa00;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ========================================= -->
+    <!-- PREMIUM POPUP HTML                        -->
+    <!-- ========================================= -->
+    <div id="premiumWelcomePopup" class="popup-overlay">
+        <div class="popup-box">
+            <div class="popup-header">
+                <h2>👑 REACH BUSTER 👑</h2>
+                <span>SYSTEM_UPDATE_V2.0_DETECTED</span>
+            </div>
+            <div class="popup-content">
+                <p>> Welcome to the most advanced and secure SMM Terminal in the matrix. New server nodes have been established.</p>
+                <ul class="popup-features">
+                    <li>Ultra-Fast Non-Drop Premium Views</li>
+                    <li>Auto-Refill System Activated</li>
+                    <li>Secure UPI / PhonePe Gateway Integrated</li>
+                </ul>
+                <button class="popup-close-btn" onclick="closePopup()">Acknowledge & Enter</button>
+            </div>
+        </div>
+    </div>
+    <!-- ========================================= -->
+
+    <div class="terminal-container">
+        <h1>[ REACH_BUSTER_v1.0 ]</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
+            <button class="tab-btn" onclick="switchTab('signup')">SIGN UP</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="login" class="form-section active">
+            <h2>> USER_LOGIN</h2>
+            <form onsubmit="return handleAuth(event)">
+                <div class="input-group">
+                    <label>> Enter Email OR Mobile Number :</label>
+                    <input type="text" placeholder="example@mail.com / 9876543210" required>
+                </div>
+                <div class="input-group">
+                    <label>> Enter Password :</label>
+                    <input type="password" placeholder="********" required>
+                </div>
+                <button type="submit" class="submit-btn">Execute Login</button>
+            </form>
+        </div>
+
+        <!-- SIGNUP FORM -->
+        <div id="signup" class="form-section">
+            <h2>> CREATE_NODE</h2>
+            <form onsubmit="return handleAuth(event)">
+                <div class="input-group">
+                    <label>> Full Name :</label>
+                    <input type="text" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label>> Email Address :</label>
+                    <input type="email" placeholder="example@mail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>> Mobile Number :</label>
+                    <input type="tel" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+                </div>
+                <div class="input-group">
+                    <label>> Create Password :</label>
+                    <input type="password" placeholder="********" required>
+                </div>
+                <button type="submit" class="submit-btn">Initialize Account</button>
+            </form>
+        </div>
+
+        <!-- STRICT SAFETY RULES SECTION -->
+        <div class="safety-rules">
+            <h3>< SYSTEM WARNINGS & TERMS OF SERVICE ></h3>
+            
+            <div class="rules-scroll">
+                <ol>
+                    <li><strong>OWN RISK WARNING:</strong> Apne real, personal ya main account par fake followers/views ka istemal apne risk par karein. Agar Instagram ya koi dusra platform aapka account block, suspend, ya shadowban karta hai, toh uski 100% zimmedari (responsibility) sirf aapki hogi. Humara system kisi bhi nuksan ke liye jawabdeh nahi hoga.</li>
+                    <li><strong>NO REFUND POLICY:</strong> Ek baar order place hone ke baad system auto-processing me chala jata hai. Kisi bhi condition me paise (funds) refund nahi honge. Galat link dalne par ya account private hone par order cancel ho jayega aur amount waste ho jayega.</li>
+                    <li><strong>NO PASSWORD REQUIRED:</strong> Hum kabhi bhi aapka social media password nahi mangte. System sirf public link par kaam karta hai.</li>
+                    <li><strong>STRICTLY PUBLIC ACCOUNTS:</strong> Order process hone se lekar complete hone tak aapka account "Public" hona chahiye. Private account par service turant fail ho jayegi.</li>
+                    <li><strong>DROP RATE ALERT:</strong> SMM services automated hoti hain. Instagram ke algorithm updates ke dauran followers ya views drop (kam) ho sakte hain. Hum kisi bhi service ki lifetime guarantee nahi dete.</li>
+                    <li><strong>AVOID OVERLAPPING:</strong> Ek hi link par ek sath 2 order tab tak na lagayein jab tak pehla order 'Complete' na ho jaye. Aisa karne par dono order stuck ho jayenge aur koi refund nahi milega.</li>
+                    <li><strong>FAKE DETAILS BAN:</strong> Agar aap fake email ID ya temporary numbers ka use karke account banayenge, toh hamara firewall aapka IP address permanently block kar dega.</li>
+                    <li><strong>SERVER DELAYS:</strong> Server overload hone ki wajah se views aane mein 24-48 hours ka delay ho sakta hai. Patience rakhein.</li>
+                </ol>
+            </div>
+
+            <!-- Mandatory Checkbox -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreeCheckbox" required>
+                <label for="agreeCheckbox">I have read all risks and take full responsibility.</label>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Form handling with Checkbox Validation
+        function handleAuth(e) {
+            e.preventDefault();
+            
+            const isChecked = document.getElementById('agreeCheckbox').checked;
+            if(!isChecked) {
+                alert("ERROR: You must accept the System Warnings and Risks before proceeding!");
+                return false;
+            }
+
+            alert("Authentication command initiated! System processing...");
+            // Yahan backend API connect hogi
+        }
+
+        // =========================================
+        // PREMIUM POPUP LOGIC
+        // =========================================
+        // Page load hone ke theek 0.8 seconds baad popup show hoga
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('premiumWelcomePopup').classList.add('show');
+            }, 800);
+        };
+
+        // Button dabane par popup band ho jayega
+        function closePopup() {
+            document.getElementById('premiumWelcomePopup').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
