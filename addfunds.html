@@ -13,7 +13,7 @@
             --border-green: #008800;
             --danger-red: #ff3333;
             --gold: #ffaa00;
-            --phonepe-purple: #5f259f; /* PhonePe Brand Color */
+            --phonepe-purple: #5f259f;
         }
 
         body {
@@ -50,7 +50,7 @@
         .premium-alert-box p { font-size: 16px; line-height: 1.6; color: #fff; margin-bottom: 25px; white-space: pre-line; }
         .premium-alert-box button {
             background: rgba(0, 255, 0, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green);
-            padding: 12px 25px; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;
+            padding: 12px 25px; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase;
         }
         .premium-alert-box.error button { background: rgba(255, 51, 51, 0.1); color: var(--danger-red); border-color: var(--danger-red); }
         .premium-alert-box button:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
@@ -81,20 +81,30 @@
         .fund-layout { display: flex; gap: 25px; }
 
         .fund-panel { flex: 6; background: rgba(0, 0, 0, 0.85); border: 1px solid var(--phonepe-purple); padding: 25px; border-radius: 8px; box-shadow: inset 0 0 15px rgba(95, 37, 159, 0.2); }
-        .fund-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px dashed var(--phonepe-purple); padding-bottom: 15px; display: flex; align-items: center; justify-content: space-between;}
-        .gateway-badge { background: var(--phonepe-purple); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 14px; text-shadow: none; }
-
+        .fund-panel h3 { margin-top: 0; color: #fff; border-bottom: 1px dashed var(--phonepe-purple); padding-bottom: 15px; }
+        
         .input-group { margin-bottom: 25px; }
         .input-group label { display: block; margin-bottom: 8px; font-size: 16px; color: #ccc; font-weight: bold;}
         .input-group input { width: 100%; padding: 15px; background: #0a0a0a; border: 2px solid #333; color: var(--gold); font-family: inherit; font-size: 20px; font-weight: bold; outline: none; box-sizing: border-box; transition: 0.3s;}
         .input-group input:focus { border-color: var(--phonepe-purple); box-shadow: 0 0 15px rgba(95, 37, 159, 0.5); }
+        
+        /* Specific input for UTR */
+        .utr-input { font-size: 16px !important; color: var(--neon-green) !important; letter-spacing: 2px; text-align: center;}
 
         .quick-amounts { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .quick-btn { flex: 1; min-width: 80px; background: rgba(255, 170, 0, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 10px; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .quick-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
 
-        .pay-btn { width: 100%; padding: 18px; background: var(--phonepe-purple); border: none; color: #fff; font-size: 20px; font-weight: bold; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: 0.3s; border-radius: 4px; }
+        .pay-btn { width: 100%; padding: 18px; background: var(--phonepe-purple); border: 1px solid var(--phonepe-purple); color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: 0.3s; border-radius: 4px; }
         .pay-btn:hover { background: #7b31cc; box-shadow: 0 0 20px rgba(123, 49, 204, 0.8); }
+
+        .verify-btn { width: 100%; padding: 18px; background: #004400; border: 1px solid var(--neon-green); color: var(--neon-green); font-size: 18px; font-weight: bold; cursor: pointer; font-family: inherit; text-transform: uppercase; transition: 0.3s; border-radius: 4px; margin-top: 10px;}
+        .verify-btn:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
+
+        /* QR Code Container */
+        .qr-container { text-align: center; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 8px; border: 1px dashed #444; }
+        .qr-container p { font-size: 16px; color: #ccc; margin-top: 0; margin-bottom: 15px; }
+        .qr-container img { width: 100%; max-width: 250px; border: 3px solid var(--phonepe-purple); border-radius: 12px; box-shadow: 0 0 20px rgba(95, 37, 159, 0.4); }
 
         .info-panel { flex: 4; background: rgba(0, 30, 0, 0.5); border: 1px solid var(--border-green); padding: 25px; border-radius: 8px; }
         .info-panel h3 { margin-top: 0; color: var(--neon-green); border-bottom: 1px dashed var(--neon-green); padding-bottom: 15px; }
@@ -159,11 +169,12 @@
 
             <div class="fund-layout">
                 
-                <!-- Left: Payment Form -->
+                <!-- Left: Payment Panel -->
                 <div class="fund-panel">
-                    <h3>SECURE PAYMENT GATEWAY <span class="gateway-badge">PhonePe Business Verified ✓</span></h3>
+                    <h3>SECURE PAYMENT GATEWAY</h3>
                     
-                    <form onsubmit="initiatePayment(event)">
+                    <!-- STEP 1: AMOUNT SELECTION FORM -->
+                    <form id="step1Form" onsubmit="initiatePayment(event)">
                         <div class="input-group">
                             <label>Enter Amount (₹)</label>
                             <input type="number" id="fundAmount" placeholder="Min: ₹10" min="10" required>
@@ -176,8 +187,27 @@
                             <button type="button" class="quick-btn" onclick="setAmount(5000)">₹5000</button>
                         </div>
 
-                        <button type="submit" class="pay-btn">PROCEED TO PAY ➔</button>
+                        <button type="submit" class="pay-btn">GENERATE QR CODE ➔</button>
                     </form>
+
+                    <!-- STEP 2: QR CODE & UTR SUBMISSION FORM (HIDDEN BY DEFAULT) -->
+                    <form id="step2Form" style="display: none;" onsubmit="submitUTR(event)">
+                        <div class="qr-container">
+                            <p>Scan with PhonePe, GPay or Paytm to pay <strong style="color:var(--gold); font-size:22px;">₹<span id="displayPayAmount">0</span></strong></p>
+                            <!-- User's provided QR Code Link -->
+                            <img src="https://iili.io/n09PgLu.jpg" alt="Payment QR Code">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Enter 12-Digit UTR / Reference Number</label>
+                            <!-- Takes exactly 12 numbers -->
+                            <input type="text" id="utrNumber" class="utr-input" placeholder="e.g. 312345678901" pattern="[0-9]{12}" minlength="12" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                        </div>
+
+                        <button type="submit" class="verify-btn">SUBMIT & VERIFY PAYMENT ✓</button>
+                        <button type="button" class="quick-btn" style="width:100%; margin-top:15px; border-color:var(--danger-red); color:var(--danger-red);" onclick="cancelPayment()">Go Back / Change Amount</button>
+                    </form>
+
                 </div>
 
                 <!-- Right: Instructions -->
@@ -185,10 +215,10 @@
                     <h3>[i] PAYMENT INSTRUCTIONS</h3>
                     <ul>
                         <li><strong>Minimum Deposit:</strong> ₹10 is the strictly minimum amount allowed by the system.</li>
-                        <li><strong>Supported Methods:</strong> All UPI Apps (PhonePe, GPay, Paytm) are supported via our secure gateway.</li>
-                        <li><strong>Instant Auto-Load:</strong> Funds are added to your wallet automatically within <strong>5-10 seconds</strong> after a successful transaction.</li>
-                        <li><strong>Warning:</strong> <span style="color:var(--danger-red);">Do not refresh or press the back button</span> while the payment is processing.</li>
-                        <li>If amount is deducted but not added to wallet, kindly generate a support ticket with your Transaction ID.</li>
+                        <li><strong>Supported Methods:</strong> Scan the QR Code using any UPI App (PhonePe, Google Pay, Paytm, BHIM).</li>
+                        <li><strong>Verification Process:</strong> After successful payment, copy the 12-digit UTR/Reference number from your app and paste it in the box.</li>
+                        <li><strong>Processing Time:</strong> Funds are added to your wallet automatically within <strong>2-5 minutes</strong> after UTR verification.</li>
+                        <li>If amount is deducted but not added to wallet after 10 minutes, kindly generate a support ticket with your UTR.</li>
                     </ul>
                 </div>
 
@@ -213,12 +243,10 @@
 
         function closeAlert() { document.getElementById('customAlertOverlay').classList.remove('show'); }
 
-        function setAmount(val) {
-            document.getElementById('fundAmount').value = val;
-        }
+        function setAmount(val) { document.getElementById('fundAmount').value = val; }
 
         // ==========================================
-        // PAYMENT GATEWAY TRIGGER
+        // STEP 1: GO TO QR CODE
         // ==========================================
         function initiatePayment(e) {
             e.preventDefault();
@@ -229,12 +257,42 @@
                 return;
             }
 
-            // YAHAN PAR TUMHARA PHONEPE BUSINESS GATEWAY KA CODE AAYEGA
-            // For now, it shows a success/redirect message.
-            showPremiumAlert("GATEWAY INITIATED", "Establishing secure connection with PhonePe Business Gateway...\n\nRedirecting to pay ₹" + amount + "...", false);
+            // Hide Step 1, Show Step 2
+            document.getElementById('step1Form').style.display = 'none';
+            document.getElementById('step2Form').style.display = 'block';
+            document.getElementById('displayPayAmount').innerText = amount;
+        }
+
+        // ==========================================
+        // CANCEL & GO BACK TO STEP 1
+        // ==========================================
+        function cancelPayment() {
+            document.getElementById('step2Form').style.display = 'none';
+            document.getElementById('step1Form').style.display = 'block';
+            document.getElementById('utrNumber').value = '';
+        }
+
+        // ==========================================
+        // STEP 2: SUBMIT UTR
+        // ==========================================
+        function submitUTR(e) {
+            e.preventDefault();
+            const utr = document.getElementById('utrNumber').value;
+            const amount = document.getElementById('displayPayAmount').innerText;
+
+            if(utr.length !== 12) {
+                showPremiumAlert("INVALID UTR", "Please enter a valid 12-digit UTR or Reference number.", true);
+                return;
+            }
+
+            // SUCCESS ALERT
+            showPremiumAlert("VERIFICATION PENDING", "Payment of ₹" + amount + " recorded.\nUTR No: " + utr + "\n\nSystem will verify the transaction and add funds to your wallet shortly.", false);
             
-            // Example of redirecting to a payment API endpoint:
-            // window.location.href = "https://your-backend.com/pay?amount=" + amount + "&uid=" + firebaseAuthUID;
+            // Go back to step 1 after submission
+            cancelPayment();
+            
+            // Yahan par tum apna backend API call add kar sakte ho 
+            // jo UTR aur amount ko database me save karega verification ke liye.
         }
     </script>
 
@@ -258,7 +316,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
-        window.firebaseAuthUID = null; // Storing UID globally so payment API can use it
+        window.firebaseAuthUID = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
